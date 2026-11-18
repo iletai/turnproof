@@ -72,6 +72,9 @@ targets:
         APP_ENV: $(APP_ENV)
         UISupportedInterfaceOrientations:
           - UIInterfaceOrientationPortrait
+        # Camera and library stay local; nothing leaves the device.
+        NSCameraUsageDescription: Turnproof uses the camera to photograph each room's condition. Photos stay on this device.
+        NSPhotoLibraryUsageDescription: Turnproof imports a photo from your library when the camera is unavailable. Photos stay on this device.
         # Subscription group of this environment's ASC record (Dev: same id as App/StoreKit/Products.storekit).
         SUBSCRIPTION_GROUP_ID: $(SUBSCRIPTION_GROUP_ID)
 

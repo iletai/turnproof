@@ -26,6 +26,10 @@
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
+	<key>NSCameraUsageDescription</key>
+	<string>Turnproof uses the camera to photograph each room's condition. Photos stay on this device.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Turnproof imports a photo from your library when the camera is unavailable. Photos stay on this device.</string>
 	<key>SUBSCRIPTION_GROUP_ID</key>
 	<string>$(SUBSCRIPTION_GROUP_ID)</string>
 	<key>UILaunchScreen</key>

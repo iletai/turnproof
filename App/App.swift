@@ -3,12 +3,14 @@ import SwiftUI
 @main
 struct TurnproofApp: App {
     @Environment(\.scenePhase) private var scenePhase
+    @State private var model = AppModel.shared
     @State private var hasSubscription = false
     @State private var hasLifetime = false
 
     var body: some Scene {
         WindowGroup {
             RootView()
+                .environment(model)
                 .environment(\.isPro, hasSubscription || hasLifetime)
                 .subscriptionStatusTask(for: Store.groupID) { state in
                     guard case .success(let statuses) = state else { return }

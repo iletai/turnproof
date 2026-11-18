@@ -2,10 +2,12 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        Text("Turnproof")
+        PropertiesListView()
     }
 }
 
 #Preview {
     ContentView()
+        .environment(AppModel.shared)
+        .environment(AppRouter())
 }
