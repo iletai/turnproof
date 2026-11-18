@@ -1,0 +1,13 @@
+#include "Shared.xcconfig"
+// Staging = release candidate on the production backend.
+#include "Backend-Prod.xcconfig"
+
+APP_ENV = staging
+APP_BUNDLE_IDENTIFIER = com.iletai.turnproof.staging
+APP_DISPLAY_NAME = Turnproof Stg
+ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon-Staging
+CODE_SIGN_ENTITLEMENTS = Config/Entitlements/Turnproof-Staging.entitlements
+SWIFT_ACTIVE_COMPILATION_CONDITIONS = $(inherited) STAGING
+DEBUG_INFORMATION_FORMAT = dwarf-with-dsym
+// Staging ASC record's subscription group id (App Store Connect → Subscriptions).
+SUBSCRIPTION_GROUP_ID =

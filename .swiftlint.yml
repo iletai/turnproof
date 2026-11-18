@@ -1,0 +1,52 @@
+# From Serene. CI runs `swiftlint --strict --quiet` (iletai/ios-shared ios-ci.yml) when this file exists.
+disabled_rules:
+  - trailing_whitespace
+  - todo
+  - line_length
+  - type_body_length
+  - trailing_newline
+
+opt_in_rules:
+  - empty_count
+  - empty_string
+  - force_unwrapping
+  - fatal_error_message
+  - first_where
+  - implicitly_unwrapped_optional
+  - redundant_type_annotation
+  - unneeded_parentheses_in_closure_argument
+  - vertical_parameter_alignment_on_call
+  - yoda_condition
+
+included:
+  - App
+  - Tests
+  - UITests
+  - Packages
+
+excluded:
+  - UITests/SnapshotHelper.swift   # vendored from fastlane
+  - "**/.build"
+  - "**/DerivedData"
+  - fastlane
+  - build
+
+identifier_name:
+  min_length:
+    warning: 1
+  excluded:
+    - id
+    - x
+    - y
+
+file_length:
+  warning: 500
+  error: 1200
+
+function_body_length:
+  warning: 60
+  error: 100
+
+cyclomatic_complexity:
+  warning: 10
+  error: 20

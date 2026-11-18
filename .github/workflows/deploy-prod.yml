@@ -1,0 +1,25 @@
+name: Deploy Prod (App Store)
+
+on:
+  # Annotated tag x.y.z on the main merge commit (no v prefix).
+  push:
+    tags: ['[0-9]+.[0-9]+.[0-9]+']
+  workflow_dispatch:
+    inputs:
+      submit:
+        description: Submit for review after upload
+        type: boolean
+        default: false
+
+concurrency:
+  group: deploy-prod
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    uses: iletai/ios-shared/.github/workflows/ios-appstore.yml@main
+    with:
+      environment: prod
+      xcode-version: latest-stable
+      submit: ${{ inputs.submit == true }}
+    secrets: inherit

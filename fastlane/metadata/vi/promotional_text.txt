@@ -1,0 +1,1 @@
+Văn bản quảng bá (≤170 ký tự), sửa được mà không cần bản build mới.

@@ -1,0 +1,50 @@
+[
+  {
+    "screenshot": "raw/01-home.png",
+    "title": "Transform Your Sleep",
+    "subtitle": "AI-powered sleep experiments",
+    "gradient": "purple-night",
+    "device": "iphone-17-pro",
+    "filename": "01-home.png"
+  },
+  {
+    "screenshot": "raw/02-stats.png",
+    "title": "Deep Insights",
+    "subtitle": "Understand your sleep patterns",
+    "gradient": "teal-ocean",
+    "device": "iphone-17-pro",
+    "filename": "02-stats.png"
+  },
+  {
+    "screenshot": "raw/03-detail.png",
+    "title": "Every Detail Matters",
+    "subtitle": "Hour-by-hour breakdown",
+    "gradient": "rose-gold",
+    "device": "iphone-17-pro",
+    "filename": "03-detail.png"
+  },
+  {
+    "screenshot": "raw/04-settings.png",
+    "title": "Your Preferences",
+    "subtitle": "Personalized for you",
+    "gradient": "morning-sky",
+    "device": "iphone-17-pro",
+    "filename": "04-settings.png"
+  },
+  {
+    "screenshot": "raw/05-onboarding.png",
+    "title": "Get Started in Seconds",
+    "subtitle": "No setup required",
+    "gradient": "coral-burst",
+    "device": "iphone-17-pro",
+    "filename": "05-onboarding.png"
+  },
+  {
+    "screenshot": "raw/06-paywall.png",
+    "title": "Unlock Everything",
+    "subtitle": "Premium features await",
+    "gradient": "deep-space",
+    "device": "iphone-17-pro",
+    "filename": "06-paywall.png"
+  }
+]

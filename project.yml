@@ -1,0 +1,152 @@
+name: Turnproof
+options:
+  bundleIdPrefix: com.iletai
+  xcodeVersion: "26.0"
+  deploymentTarget:
+    iOS: "18.0"
+  createIntermediateGroups: true
+  groupSortPosition: top
+  developmentLanguage: vi
+
+settings:
+  base:
+    SWIFT_VERSION: "6.0"
+    # Lets Xcode extract String(localized:)/Text keys into the string catalogs.
+    SWIFT_EMIT_LOC_STRINGS: YES
+    LOCALIZATION_PREFERS_STRING_CATALOGS: YES
+    ENABLE_USER_SCRIPT_SANDBOXING: YES
+
+configs:
+  Debug-Dev: debug
+  Release-Dev: release
+  Debug-Staging: debug
+  Release-Staging: release
+  Debug-Prod: debug
+  Release-Prod: release
+
+# One xcconfig per environment; contract in skill ios-new-app references/environments.md.
+configFiles:
+  Debug-Dev: Config/Dev.xcconfig
+  Release-Dev: Config/Dev.xcconfig
+  Debug-Staging: Config/Staging.xcconfig
+  Release-Staging: Config/Staging.xcconfig
+  Debug-Prod: Config/Prod.xcconfig
+  Release-Prod: Config/Prod.xcconfig
+
+# Own libraries (versions + integration snippets): skill `iletai-libs`; new_app.sh --with adds them here.
+packages:
+  BaseNavigationStack:
+    url: https://github.com/iletai/BaseNavigationStack.git
+    from: 2.1.0
+
+targets:
+  Turnproof:
+    type: application
+    platform: iOS
+    sources:
+      - path: App
+    settings:
+      base:
+        # Own variable: a project-level PRODUCT_BUNDLE_IDENTIFIER would also give the test bundles the app's id.
+        PRODUCT_BUNDLE_IDENTIFIER: $(APP_BUNDLE_IDENTIFIER)
+        TARGETED_DEVICE_FAMILY: "1"
+      configs:
+        # Debug-* keep DEBUG on top of the env condition from the xcconfig (partial match on config name).
+        debug:
+          SWIFT_ACTIVE_COMPILATION_CONDITIONS: $(inherited) DEBUG
+    dependencies:
+      - package: BaseNavigationStack
+    info:
+      path: App/Info.plist
+      properties:
+        # Xcode silently drops INFOPLIST_KEY_<custom> build settings, so every custom key lives here.
+        UILaunchScreen: {}
+        CFBundleDisplayName: $(APP_DISPLAY_NAME)
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        # Only Apple's built-in encryption; avoids "Missing Compliance" on every build.
+        ITSAppUsesNonExemptEncryption: false
+        # Store page for update prompts / share links; empty until the ASC record exists.
+        APP_STORE_URL: $(APP_STORE_URL)
+        # dev | staging | prod, read by AppConfiguration.environment.
+        APP_ENV: $(APP_ENV)
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+        # Subscription group of this environment's ASC record (Dev: same id as App/StoreKit/Products.storekit).
+        SUBSCRIPTION_GROUP_ID: $(SUBSCRIPTION_GROUP_ID)
+
+  TurnproofTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: Tests
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        # CODE_SIGN_ENTITLEMENTS comes from the project-level xcconfig (app entitlements); a test bundle must not claim them.
+        CODE_SIGN_ENTITLEMENTS: ""
+    dependencies:
+      - target: Turnproof
+
+  TurnproofUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources:
+      - path: UITests
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        # CODE_SIGN_ENTITLEMENTS comes from the project-level xcconfig (app entitlements); a test bundle must not claim them.
+        CODE_SIGN_ENTITLEMENTS: ""
+    dependencies:
+      - target: Turnproof
+
+schemes:
+  # Dev owns the test targets; every scheme archives with its Release-* config.
+  Turnproof-Dev:
+    build:
+      targets:
+        Turnproof: all
+        TurnproofTests: [test]
+        TurnproofUITests: [test]
+    run:
+      config: Debug-Dev
+      storeKitConfiguration: App/StoreKit/Products.storekit
+    test:
+      config: Debug-Dev
+      gatherCoverageData: true
+      coverageTargets:
+        - Turnproof
+      targets:
+        - TurnproofTests
+        - TurnproofUITests
+    profile:
+      config: Release-Dev
+    analyze:
+      config: Debug-Dev
+    archive:
+      config: Release-Dev
+  Turnproof-Staging:
+    build:
+      targets:
+        Turnproof: all
+    run:
+      config: Debug-Staging
+    profile:
+      config: Release-Staging
+    analyze:
+      config: Debug-Staging
+    archive:
+      config: Release-Staging
+  Turnproof:
+    build:
+      targets:
+        Turnproof: all
+    run:
+      config: Debug-Prod
+    profile:
+      config: Release-Prod
+    analyze:
+      config: Debug-Prod
+    archive:
+      config: Release-Prod

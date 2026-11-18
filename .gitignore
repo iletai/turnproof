@@ -1,0 +1,30 @@
+## Xcode / XcodeGen
+*.xcodeproj
+*.xcworkspace
+xcuserdata/
+DerivedData/
+
+## Swift Package Manager
+.build/
+.swiftpm/
+Packages/*/.build/
+Packages/*/.swiftpm/
+
+## macOS
+.DS_Store
+
+## Secrets / local config
+.env
+*.xcconfig.local
+# Non-secret per-environment config is committed; keep these even if a broader `.env.*` rule exists.
+!.env.example
+!fastlane/.env.*
+
+## fastlane
+fastlane/report.xml
+fastlane/test_output/
+fastlane/README.md
+build/
+
+## Local xcconfig secrets
+Config/Secrets.xcconfig

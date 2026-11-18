@@ -1,0 +1,8 @@
+git_url(ENV["MATCH_GIT_URL"] || "git@github.com:iletai/ios-certificates.git")
+storage_mode("git")
+type("appstore")
+app_identifier([ENV["APP_IDENTIFIER"], *ENV.fetch("EXTRA_APP_IDENTIFIERS", "").split(",")].reject(&:empty?))
+team_id(ENV["APPLE_TEAM_ID"])
+git_branch("master")
+shallow_clone(true)
+readonly(ENV["CI"] == "true")

@@ -1,0 +1,2 @@
+# Lanes live in iletai/ios-shared: asc_api_key, bootstrap, sync_signing, test, beta, metadata, screenshots, release(submit:)
+import_from_git(url: "https://github.com/iletai/ios-shared.git", branch: "main", path: "fastlane/Fastfile")

@@ -1,0 +1,4 @@
+// Production backend + store values, shared by Staging and Prod (included by both).
+// Set once the ASC record exists; $() keeps // from starting a comment:
+// APP_STORE_URL = https:/$()/apps.apple.com/app/id<ASC_APP_ID>
+APP_STORE_URL =

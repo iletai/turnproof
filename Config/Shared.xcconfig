@@ -1,0 +1,8 @@
+DEVELOPMENT_TEAM = AP58YLHQ2S
+CODE_SIGN_STYLE = Automatic
+// One version for every environment; bumped on release/x.y.z. CI sets the build number.
+MARKETING_VERSION = 1.0.0
+CURRENT_PROJECT_VERSION = 1
+
+// Local secrets (gitignored); CI writes this file from repo secrets. See Secrets.xcconfig.example.
+#include? "Secrets.xcconfig"

@@ -1,0 +1,12 @@
+#include "Shared.xcconfig"
+
+// Dev: own backend, TestFlight internal ("<App> Dev" ASC record).
+APP_ENV = dev
+APP_BUNDLE_IDENTIFIER = com.iletai.turnproof.dev
+APP_DISPLAY_NAME = Turnproof Dev
+ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon-Dev
+CODE_SIGN_ENTITLEMENTS = Config/Entitlements/Turnproof-Dev.entitlements
+SWIFT_ACTIVE_COMPILATION_CONDITIONS = $(inherited) DEV
+APP_STORE_URL =
+// Dev ASC record's subscription group id; keep App/StoreKit/Products.storekit's group id identical.
+SUBSCRIPTION_GROUP_ID = 21000001
