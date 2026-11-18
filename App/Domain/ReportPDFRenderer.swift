@@ -260,7 +260,7 @@ struct ReportPDFRenderer: PDFRendering, Sendable {
     }
 
     private func drawImage(_ data: Data?, in rect: CGRect, context: CGContext) {
-        guard let data, let image = UIImage(data: data)?.cgImage else {
+        guard let data, let uiImage = UIImage(data: data), let image = uiImage.cgImage else {
             drawPlaceholderPhoto(in: rect, context: context)
             return
         }
@@ -271,7 +271,8 @@ struct ReportPDFRenderer: PDFRendering, Sendable {
         let origin = CGPoint(x: rect.midX - size.width / 2, y: rect.midY - size.height / 2)
         context.addRect(rect)
         context.clip()
-        context.draw(image, in: CGRect(origin: origin, size: size))
+        // UIImage.draw honours the UIKit-flipped PDF context; CGContext.draw would mirror the image vertically.
+        uiImage.draw(in: CGRect(origin: origin, size: size))
         context.restoreGState()
         UIColor(red: 0.87, green: 0.84, blue: 0.79, alpha: 1).setStroke()
         context.setLineWidth(1)
@@ -292,7 +293,7 @@ struct ReportPDFRenderer: PDFRendering, Sendable {
         if let data, let image = UIImage(data: data)?.cgImage {
             context.saveGState()
             context.interpolationQuality = .high
-            context.draw(image, in: rect.insetBy(dx: 12, dy: 8))
+            UIImage(cgImage: image).draw(in: rect.insetBy(dx: 12, dy: 8))
             context.restoreGState()
         }
         UIColor(red: 0.87, green: 0.84, blue: 0.79, alpha: 1).setStroke()
@@ -312,7 +313,7 @@ struct ReportPDFRenderer: PDFRendering, Sendable {
         else { return }
         context.saveGState()
         context.interpolationQuality = .none
-        context.draw(cgImage, in: rect)
+        UIImage(cgImage: cgImage).draw(in: rect)
         context.restoreGState()
     }
 

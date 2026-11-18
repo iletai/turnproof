@@ -1,6 +1,7 @@
 import CoreGraphics
 import Foundation
 import Testing
+import UIKit
 @testable import Turnproof
 
 struct PDFLayoutTests {
@@ -98,5 +99,48 @@ struct PDFLayoutTests {
         let layout = renderer.layout(for: packet(rooms: [("kitchen", 1)]), digest: "a1b2c3d4e5f6",
                                      pageCount: 3)
         #expect(layout.last?.blocks.contains { $0.text.contains("PAGES 3") } == true)
+    }
+
+    /// Reads the page into a bitmap and returns the RGB of the pixel `rowFromTop` rows below the page top.
+    private func pixel(of pdf: Data, page index: Int, x: Int, rowFromTop: Int) throws -> (r: Int, g: Int, b: Int) {
+        let document = try #require(CGPDFDocument(CGDataProvider(data: pdf as CFData)!))
+        let page = try #require(document.page(at: index + 1))
+        let size = ReportPDFRenderer.pageSize
+        let width = Int(size.width), height = Int(size.height)
+        var bytes = [UInt8](repeating: 0, count: width * height * 4)
+        try bytes.withUnsafeMutableBytes { buffer in
+            let context = try #require(CGContext(
+                data: buffer.baseAddress, width: width, height: height, bitsPerComponent: 8,
+                bytesPerRow: width * 4, space: CGColorSpaceCreateDeviceRGB(),
+                bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue))
+            context.setFillColor(UIColor.white.cgColor)
+            context.fill(CGRect(origin: .zero, size: size))
+            context.drawPDFPage(page)
+        }
+        let offset = (rowFromTop * width + x) * 4
+        return (Int(bytes[offset]), Int(bytes[offset + 1]), Int(bytes[offset + 2]))
+    }
+
+    @Test func photosKeepTheirOrientationInThePDF() throws {
+        let size = CGSize(width: 100, height: 100)
+        let jpeg = UIGraphicsImageRenderer(size: size, format: .init(for: .init(displayScale: 1))).jpegData(
+            withCompressionQuality: 1
+        ) { context in
+            UIColor.red.setFill()
+            context.fill(CGRect(x: 0, y: 0, width: 100, height: 50))
+            UIColor.blue.setFill()
+            context.fill(CGRect(x: 0, y: 50, width: 100, height: 50))
+        }
+        let packet = packet(rooms: [("kitchen", 1)])
+        let layout = renderer.layout(for: packet, digest: "digest", pageCount: 0)
+        let photo = try #require(layout[1].blocks.first { $0.kind == .photo })
+        let pdf = try renderer.render(packet: packet, digest: "digest",
+                                      photos: [photo.text: jpeg])
+
+        let x = Int(photo.rect.midX)
+        let top = try pixel(of: pdf, page: 1, x: x, rowFromTop: Int(photo.rect.minY) + 8)
+        let bottom = try pixel(of: pdf, page: 1, x: x, rowFromTop: Int(photo.rect.maxY) - 8)
+        #expect(top.r > 150 && top.b < 100, "top of the photo should stay red, got \(top)")
+        #expect(bottom.b > 150 && bottom.r < 100, "bottom of the photo should stay blue, got \(bottom)")
     }
 }
