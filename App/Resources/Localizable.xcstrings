@@ -1552,6 +1552,38 @@
           }
         }
       }
+    },
+    "This device has no camera. Use Library instead." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This device has no camera. Use Library instead."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Thiết bị này không có camera. Hãy chọn từ Thư viện."
+          }
+        }
+      }
+    },
+    "Latest photo in this room" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Latest photo in this room"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ảnh mới nhất của phòng này"
+          }
+        }
+      }
     }
   },
   "version" : "1.0"

@@ -18,6 +18,7 @@ struct BottomBar<Content: View>: View {
 struct PropertiesListView: View {
     @Environment(AppModel.self) private var model
     @Environment(AppRouter.self) private var router
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
     var body: some View {
         _ = model.revision
@@ -59,11 +60,15 @@ struct PropertiesListView: View {
                 .font(TPType.body())
                 .foregroundStyle(TPColor.inkSecondary)
             Hairline().padding(.top, 12)
-            HStack(spacing: 12) {
+            // Stacks at accessibility sizes instead of truncating the counts.
+            let layout = dynamicTypeSize.isAccessibilitySize
+                ? AnyLayout(VStackLayout(alignment: .leading, spacing: 4))
+                : AnyLayout(HStackLayout(spacing: 12))
+            layout {
                 Text("\(model.properties.count) units").font(TPType.eyebrow())
-                Text("·").foregroundStyle(TPColor.inkTertiary)
+                if !dynamicTypeSize.isAccessibilitySize { Text("·").foregroundStyle(TPColor.inkTertiary) }
                 Text("\(sealedCount) sealed reports").font(TPType.eyebrow())
-                Spacer()
+                if !dynamicTypeSize.isAccessibilitySize { Spacer() }
             }
             .foregroundStyle(TPColor.inkSecondary)
             .padding(.vertical, 12)
@@ -95,7 +100,7 @@ struct PropertiesListView: View {
                 router.present(sheet: .addProperty)
             } label: {
                 VStack(spacing: 6) {
-                    Image(systemName: "plus").font(.system(size: 18, weight: .medium))
+                    Image(systemName: "plus").font(.system(.title3, weight: .medium))
                     Text("Add your first unit").font(TPType.bodyStrong())
                     Text("Register an address and start a baseline.")
                         .font(TPType.small()).foregroundStyle(TPColor.inkSecondary)
@@ -160,7 +165,7 @@ struct PropertyRow: View {
                         .foregroundStyle(TPColor.inkTertiary)
                 }
                 Image(systemName: "chevron.right")
-                    .font(.system(size: 12, weight: .semibold))
+                    .font(.system(.caption, weight: .semibold))
                     .foregroundStyle(TPColor.inkTertiary)
             }
         }

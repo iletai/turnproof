@@ -14,7 +14,10 @@ struct TurnproofApp: App {
                 .environment(\.isPro, hasSubscription || hasLifetime)
                 .subscriptionStatusTask(for: Store.groupID) { state in
                     guard case .success(let statuses) = state else { return }
-                    hasSubscription = statuses.contains { $0.state == .subscribed || $0.state == .inGracePeriod }
+                    hasSubscription = statuses.contains {
+                        guard case .verified = $0.transaction, case .verified = $0.renewalInfo else { return false }
+                        return $0.state == .subscribed || $0.state == .inGracePeriod
+                    }
                 }
                 .currentEntitlementTask(for: Store.lifetimeID) { state in
                     guard case .success(let result) = state else { return }

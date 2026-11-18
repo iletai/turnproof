@@ -33,16 +33,31 @@ enum TPColor {
     }
 }
 
+/// Point sizes pick the nearest text style so every font scales with Dynamic Type.
 enum TPType {
-    static func display(_ size: CGFloat = 34) -> Font { .system(size: size, weight: .medium, design: .serif) }
-    static func title(_ size: CGFloat = 28) -> Font { .system(size: size, weight: .medium, design: .serif) }
-    static func heading(_ size: CGFloat = 18) -> Font { .system(size: size, weight: .medium, design: .serif) }
-    static func body(_ size: CGFloat = 16) -> Font { .system(size: size) }
-    static func bodyStrong(_ size: CGFloat = 16) -> Font { .system(size: size, weight: .semibold) }
-    static func small(_ size: CGFloat = 14) -> Font { .system(size: size) }
-    static func caption(_ size: CGFloat = 12) -> Font { .system(size: size) }
-    static func eyebrow() -> Font { .system(size: 11, weight: .regular, design: .monospaced) }
-    static func mono(_ size: CGFloat = 12) -> Font { .system(size: size, design: .monospaced) }
+    private static func style(_ size: CGFloat) -> Font.TextStyle {
+        switch size {
+        case ...11: .caption2
+        case ...12: .caption
+        case ...13: .footnote
+        case ...15: .subheadline
+        case ...17: .body
+        case ...20: .title3
+        case ...24: .title2
+        case ...28: .title
+        default: .largeTitle
+        }
+    }
+
+    static func display(_ size: CGFloat = 34) -> Font { .system(style(size), design: .serif, weight: .medium) }
+    static func title(_ size: CGFloat = 28) -> Font { .system(style(size), design: .serif, weight: .medium) }
+    static func heading(_ size: CGFloat = 18) -> Font { .system(style(size), design: .serif, weight: .medium) }
+    static func body(_ size: CGFloat = 16) -> Font { .system(style(size)) }
+    static func bodyStrong(_ size: CGFloat = 16) -> Font { .system(style(size), weight: .semibold) }
+    static func small(_ size: CGFloat = 14) -> Font { .system(style(size)) }
+    static func caption(_ size: CGFloat = 12) -> Font { .system(style(size)) }
+    static func eyebrow() -> Font { Font.caption.monospaced() }
+    static func mono(_ size: CGFloat = 12) -> Font { Font.system(style(size)).monospaced() }
 }
 
 enum TPSpacing {

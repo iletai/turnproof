@@ -31,7 +31,7 @@ struct RoomChecklistView: View {
                         router.pop()
                     } label: {
                         Image(systemName: "chevron.left")
-                            .font(.system(size: 16, weight: .semibold))
+                            .font(.system(.body, weight: .semibold))
                             .foregroundStyle(TPColor.ink)
                             .frame(width: 44, height: 44, alignment: .leading)
                     }
@@ -105,7 +105,7 @@ struct RoomChecklistView: View {
                     StatusChip(text: "Recorded", color: TPColor.good, background: TPColor.goodSoft)
                 }
                 Image(systemName: "chevron.right")
-                    .font(.system(size: 12, weight: .semibold))
+                    .font(.system(.caption, weight: .semibold))
                     .foregroundStyle(TPColor.inkTertiary)
             }
             .padding(.vertical, 14)

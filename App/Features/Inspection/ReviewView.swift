@@ -33,7 +33,7 @@ struct ReviewView: View {
                         router.pop()
                     } label: {
                         Image(systemName: "chevron.left")
-                            .font(.system(size: 16, weight: .semibold))
+                            .font(.system(.body, weight: .semibold))
                             .foregroundStyle(TPColor.ink)
                             .frame(width: 44, height: 44, alignment: .leading)
                     }

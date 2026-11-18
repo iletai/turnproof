@@ -64,6 +64,7 @@ struct CaptureView: View {
                             .frame(height: 220)
                             .clipped()
                             .overlay(Rectangle().stroke(TPColor.hairline, lineWidth: 1))
+                            .accessibilityLabel("Latest photo in this room")
                     }
                     conditionControl
                     noteField
@@ -96,7 +97,7 @@ struct CaptureView: View {
                 if isSheet { dismiss() } else { router.pop() }
             } label: {
                 Image(systemName: "chevron.left")
-                    .font(.system(size: 16, weight: .semibold))
+                    .font(.system(.body, weight: .semibold))
                     .foregroundStyle(TPColor.ink)
                     .frame(width: 44, height: 44, alignment: .leading)
             }
@@ -183,7 +184,7 @@ struct CaptureView: View {
                 model.deleteFinding(finding)
             } label: {
                 Image(systemName: "trash")
-                    .font(.system(size: 14))
+                    .font(.system(.subheadline))
                     .foregroundStyle(TPColor.inkTertiary)
                     .frame(width: 44, height: 44)
             }
@@ -225,8 +226,10 @@ struct CaptureView: View {
                 isSaving = false
                 if let data { save(data, inspection: inspection, room: room) }
             }
-        } else {
+        } else if UIImagePickerController.isSourceTypeAvailable(.camera) {
             isCameraPresented = true
+        } else {
+            errorText = String(localized: "This device has no camera. Use Library instead.")
         }
     }
 

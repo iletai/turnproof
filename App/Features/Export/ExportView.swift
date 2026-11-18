@@ -4,6 +4,7 @@ import UIKit
 struct ExportView: View {
     @Environment(AppModel.self) private var model
     @Environment(AppRouter.self) private var router
+    @Environment(\.isPro) private var isPro
     let inspectionID: UUID
 
     @State private var artifact: ExportArtifact?
@@ -48,7 +49,7 @@ struct ExportView: View {
     private func content(_ inspection: Inspection, _ report: SealedReport) -> some View {
         let digest = report.sha256
         let shortCode = model.integrity.shortCode(digest)
-        let unlocked = model.isUnlocked(report)
+        let unlocked = isPro || model.isUnlocked(report)
         return VStack(spacing: 0) {
             ScrollView {
                 VStack(alignment: .leading, spacing: 16) {
@@ -145,6 +146,8 @@ struct ExportView: View {
                     }
                     .font(TPType.small())
                     .foregroundStyle(TPColor.inkSecondary)
+                    .frame(maxWidth: .infinity, minHeight: 44)
+                    .contentShape(Rectangle())
                     .accessibilityIdentifier("export.done")
                 }
             }
