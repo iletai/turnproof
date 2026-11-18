@@ -12,6 +12,7 @@ struct SignView: View {
     @State private var errorText: String?
     @State private var isSealing = false
     @State private var showPaywall = false
+    @State private var sealedReport: SealedReport?
     @State private var tenantCanvas = 0
     @State private var landlordCanvas = 0
 
@@ -31,6 +32,7 @@ struct SignView: View {
         .sheet(isPresented: $showPaywall) {
             PaywallScreen {
                 showPaywall = false
+                if let sealedReport { model.unlock(sealedReport) }
                 router.push(.export(inspectionID))
             }
         }
@@ -160,7 +162,8 @@ struct SignView: View {
         model.sign(inspection: inspection, role: .tenant, png: tenantPNG)
         model.sign(inspection: inspection, role: .landlord, png: landlordPNG)
         do {
-            _ = try model.sealAndRender(inspection: inspection)
+            let artifact = try model.sealAndRender(inspection: inspection)
+            sealedReport = artifact.report
         } catch InspectionError.blocked {
             errorText = String(localized: "Some checks are still open. Go back to Review.")
             return
@@ -177,6 +180,7 @@ struct SignView: View {
         errorText = nil
         if ExportGate.allowsExport(isPro: isPro, counter: model.counter) {
             ExportGate.recordExport(counter: model.counter, isPro: isPro)
+            if let sealedReport { model.unlock(sealedReport) }
             router.push(.export(inspection.id))
         } else {
             showPaywall = true

@@ -32,7 +32,15 @@ enum PDFError: Error {
     case contextUnavailable
 }
 
-struct ReportPDFRenderer: Sendable {
+/// Injected so tests can prove the seal is not committed when rendering fails.
+protocol PDFRendering: Sendable {
+    func layout(for packet: ReportPacket, digest: String, pageCount: Int,
+                signatures: [String: Data]) -> [PageLayout]
+    func render(packet: ReportPacket, digest: String, photos: [String: Data],
+                signatures: [String: Data]) throws -> Data
+}
+
+struct ReportPDFRenderer: PDFRendering, Sendable {
     static let pageSize = CGSize(width: 612, height: 792)
     static let margin: CGFloat = 48
     static let photosPerPage = 4
@@ -43,7 +51,8 @@ struct ReportPDFRenderer: Sendable {
         self.shortCode = shortCode
     }
 
-    func layout(for packet: ReportPacket, digest: String, pageCount: Int) -> [PageLayout] {
+    func layout(for packet: ReportPacket, digest: String, pageCount: Int,
+                signatures: [String: Data] = [:]) -> [PageLayout] {
         var pages: [PageLayout] = []
         pages.append(cover(packet: packet, digest: digest, index: 0))
 
@@ -58,15 +67,17 @@ struct ReportPDFRenderer: Sendable {
             }
         }
 
-        pages.append(signaturePage(packet: packet, index: pages.count))
+        pages.append(signaturePage(packet: packet, signatures: signatures, index: pages.count))
         pages.append(integrityPage(packet: packet, digest: digest, pageCount: pageCount,
                                    index: pages.count))
         return pages
     }
 
-    func render(packet: ReportPacket, digest: String, photos: [String: Data] = [:]) throws -> Data {
-        let provisional = layout(for: packet, digest: digest, pageCount: 0)
-        let pages = layout(for: packet, digest: digest, pageCount: provisional.count)
+    func render(packet: ReportPacket, digest: String, photos: [String: Data] = [:],
+                signatures: [String: Data] = [:]) throws -> Data {
+        let provisional = layout(for: packet, digest: digest, pageCount: 0, signatures: signatures)
+        let pages = layout(for: packet, digest: digest, pageCount: provisional.count,
+                           signatures: signatures)
         let format = UIGraphicsPDFRendererFormat()
         format.documentInfo = [
             kCGPDFContextCreator as String: "Turnproof",
@@ -155,8 +166,8 @@ struct ReportPDFRenderer: Sendable {
         return PageLayout(index: index, blocks: blocks)
     }
 
-    private func signaturePage(packet: ReportPacket, index: Int) -> PageLayout {
-        let signatures: [String: Data] = [:]
+    private func signaturePage(packet: ReportPacket, signatures: [String: Data],
+                               index: Int) -> PageLayout {
         var blocks: [LayoutBlock] = []
         let width = Self.pageSize.width - Self.margin * 2
         blocks.append(.init(kind: .eyebrow, rect: CGRect(x: Self.margin, y: Self.margin, width: width, height: 14),
@@ -288,6 +299,7 @@ struct ReportPDFRenderer: Sendable {
         context.setLineWidth(1)
         context.stroke(rect)
         let baseline = CGRect(x: rect.minX + 24, y: rect.maxY - 24, width: rect.width - 48, height: 1)
+        UIColor(red: 0.29, green: 0.35, blue: 0.42, alpha: 1).setFill()
         context.fill(baseline)
     }
 
@@ -320,10 +332,12 @@ struct ReportPDFRenderer: Sendable {
         return parts.joined(separator: " · ")
     }
 
-    private static func date(_ date: Date) -> String {
+    /// UTC so a packet printed after travelling still shows the instant the digest hashed.
+    static func date(_ date: Date) -> String {
         let formatter = DateFormatter()
         formatter.locale = Locale(identifier: "en_US_POSIX")
-        formatter.dateFormat = "d MMM yyyy, HH:mm"
+        formatter.timeZone = TimeZone(secondsFromGMT: 0)
+        formatter.dateFormat = "d MMM yyyy, HH:mm 'UTC'"
         return formatter.string(from: date)
     }
 }

@@ -9,6 +9,7 @@ struct ExportView: View {
     @State private var artifact: ExportArtifact?
     @State private var shareURL: URL?
     @State private var copied = false
+    @State private var showPaywall = false
 
     var body: some View {
         _ = model.revision
@@ -31,11 +32,23 @@ struct ExportView: View {
             artifact = built
             shareURL = built.fileURL
         }
+        .sheet(isPresented: $showPaywall) {
+            PaywallScreen {
+                showPaywall = false
+                if let report = currentReport { model.unlock(report) }
+            }
+        }
+    }
+
+    private var currentReport: SealedReport? {
+        guard let inspection = model.inspection(id: inspectionID) else { return nil }
+        return model.latestReport(for: inspection)
     }
 
     private func content(_ inspection: Inspection, _ report: SealedReport) -> some View {
         let digest = report.sha256
         let shortCode = model.integrity.shortCode(digest)
+        let unlocked = model.isUnlocked(report)
         return VStack(spacing: 0) {
             ScrollView {
                 VStack(alignment: .leading, spacing: 16) {
@@ -67,6 +80,13 @@ struct ExportView: View {
                             }
                             .foregroundStyle(TPColor.inkSecondary)
                         }
+                    }
+
+                    if !unlocked {
+                        Text("Read-only until this report is unlocked. The packet is already sealed; verifying it stays free.")
+                            .font(TPType.small())
+                            .foregroundStyle(TPColor.warning)
+                            .accessibilityIdentifier("export.locked")
                     }
 
                     if let artifact, artifact.pdfData.count > 20_000_000 {
@@ -103,7 +123,7 @@ struct ExportView: View {
             }
             BottomBar {
                 VStack(spacing: 8) {
-                    if let shareURL {
+                    if let shareURL, unlocked {
                         ShareLink(item: shareURL) {
                             Label("Share PDF", systemImage: "square.and.arrow.up")
                                 .font(TPType.bodyStrong())
@@ -113,6 +133,12 @@ struct ExportView: View {
                                 .clipShape(RoundedRectangle(cornerRadius: 4))
                         }
                         .accessibilityIdentifier("export.share")
+                    } else if !unlocked {
+                        Button("Unlock sharing") {
+                            showPaywall = true
+                        }
+                        .buttonStyle(TPPrimaryButtonStyle())
+                        .accessibilityIdentifier("export.unlock")
                     }
                     Button("Done") {
                         router.popToRoot()

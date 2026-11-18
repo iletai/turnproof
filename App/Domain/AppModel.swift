@@ -9,6 +9,7 @@ final class AppModel {
         if Launch.flags.contains(.resetState) {
             TurnproofStore.resetStore()
             FreeReportCounter().reset()
+            UserDefaults.standard.removeObject(forKey: AppModel.unlockedKey)
         }
         do {
             let container = try TurnproofStore.container()
@@ -32,6 +33,11 @@ final class AppModel {
     let integrity = IntegrityService()
     let counter: FreeReportCounter
     var lastError: String?
+    var renderer: any PDFRendering
+
+    /// Reports whose export was paid for (or took the free slot). Survives relaunch.
+    static let unlockedKey = "turnproof.unlocked_reports.v1"
+    private(set) var unlockedReportIDs: Set<UUID>
 
     /// Bumped by every mutation so SwiftData-backed screens re-read their fetches.
     var revision = 0
@@ -39,13 +45,28 @@ final class AppModel {
     init(store: TurnproofStore, container: ModelContainer? = nil,
          clock: @escaping @Sendable () -> Date = { Date() },
          photoSource: PhotoSource = UITestPhotoSource(), usesFixturePhotos: Bool = false,
-         counter: FreeReportCounter = FreeReportCounter()) {
+         counter: FreeReportCounter = FreeReportCounter(),
+         renderer: any PDFRendering = ReportPDFRenderer { IntegrityService().shortCode($0) }) {
         self.store = store
         self.container = container
         self.clock = clock
         self.photoSource = photoSource
         self.usesFixturePhotos = usesFixturePhotos
         self.counter = counter
+        self.renderer = renderer
+        self.unlockedReportIDs = Set(
+            (UserDefaults.standard.stringArray(forKey: Self.unlockedKey) ?? [])
+                .compactMap(UUID.init(uuidString:))
+        )
+    }
+
+    // MARK: Export access
+
+    func isUnlocked(_ report: SealedReport) -> Bool { unlockedReportIDs.contains(report.id) }
+
+    func unlock(_ report: SealedReport) {
+        unlockedReportIDs.insert(report.id)
+        UserDefaults.standard.set(unlockedReportIDs.map(\.uuidString), forKey: Self.unlockedKey)
     }
 
     // MARK: Properties
@@ -83,6 +104,10 @@ final class AppModel {
 
     func capture(room: Room, inspection: Inspection, rawPhoto: Data, condition: Condition,
                  note: String, flagged: Bool) throws {
+        guard inspection.status == .draft else { throw InspectionError.sealed }
+        guard findings(for: inspection).count < InspectionService.photoLimit else {
+            throw InspectionError.photoLimit
+        }
         let ingested = try ingest.ingest(rawPhoto)
         let service = InspectionService(clock: clock)
         let finding = try service.capture(
@@ -94,16 +119,20 @@ final class AppModel {
     }
 
     func sign(inspection: Inspection, role: SignatureRole, png: Data) {
+        guard inspection.status == .draft else { return }
         store.upsertSignature(inspectionID: inspection.id, role: role, png: png, now: clock())
         revision &+= 1
     }
 
     func deleteFinding(_ finding: Finding) {
+        // Sealed records are immutable: the stored digest must keep describing what exists.
+        guard inspection(id: finding.inspectionID)?.status == .draft else { return }
         store.deleteFinding(finding)
         revision &+= 1
     }
 
-    /// Validates, seals, renders and stores the report. Returns the artifact to share.
+    /// Validates, renders, then seals. The inspection stays a draft until the PDF exists, so a
+    /// crash mid-render can never leave a sealed inspection with no report behind it.
     func sealAndRender(inspection: Inspection) throws -> ExportArtifact {
         let property = properties.first(where: { $0.id == inspection.propertyID })
         guard let property else { throw RepositoryError.invalidLabel }
@@ -111,21 +140,38 @@ final class AppModel {
         let findings = findings(for: inspection)
         let signatures = signatures(for: inspection)
         let service = InspectionService(clock: clock)
-        _ = try service.seal(inspection, rooms: rooms, findings: findings, signatures: signatures)
-        store.save()
+        try service.validateSeal(inspection, rooms: rooms, findings: findings, signatures: signatures)
 
+        let sealedAt = clock()
+        inspection.sealedAt = sealedAt
         let packet = integrity.packet(property: property, inspection: inspection, rooms: rooms,
                                       findings: findings, signatures: signatures)
         let digest = try integrity.digest(packet)
-        var photoMap: [String: Data] = [:]
+
+        var photos: [String: Data] = [:]
         for finding in findings {
-            photoMap[IntegrityService.sha256(finding.photoData)] = finding.photoData
+            photos[IntegrityService.sha256(finding.photoData)] = finding.photoData
         }
-        let renderer = ReportPDFRenderer(shortCode: integrity.shortCode)
-        let pdf = try renderer.render(packet: packet, digest: digest, photos: photoMap)
-        let pages = renderer.layout(for: packet, digest: digest, pageCount: 0).count
+        var signaturePayloads: [String: Data] = [:]
+        for signature in signatures {
+            signaturePayloads[IntegrityService.sha256(signature.pngData)] = signature.pngData
+        }
+
+        let pdf: Data
+        do {
+            pdf = try renderer.render(packet: packet, digest: digest, photos: photos,
+                                      signatures: signaturePayloads)
+        } catch {
+            inspection.sealedAt = nil
+            throw error
+        }
+        let pages = renderer.layout(for: packet, digest: digest, pageCount: 0,
+                                    signatures: signaturePayloads).count
+
+        inspection.status = .sealed
+        store.save()
         let report = SealedReport(inspectionID: inspection.id, revision: inspection.revision,
-                                  generatedAt: inspection.sealedAt ?? clock(), sha256: digest,
+                                  generatedAt: sealedAt, sha256: digest,
                                   pageCount: pages, pdfData: pdf,
                                   supersedesID: reports(for: inspection).first?.id)
         store.insert(report)

@@ -111,7 +111,39 @@ final class EndToEndTests: XCTestCase {
         dismiss.tap()
 
         XCTAssertTrue(app.staticTexts["This report was sealed and cannot be edited."].waitForExistence(timeout: 5))
+
+        // The sealed screen can still reach the packet, but sharing stays gated.
+        app.buttons["sign.seal"].tap()
+        XCTAssertTrue(app.buttons["export.unlock"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["export.locked"].exists)
         XCTAssertFalse(app.buttons["export.share"].exists)
+        app.buttons["export.done"].tap()
+
+        // Both sealed packets are reachable from history; exactly one is unlocked.
+        XCTAssertTrue(propertyRow(app).waitForExistence(timeout: 5))
+        propertyRow(app).tap()
+        let rows = app.buttons.matching(NSPredicate(format: "identifier BEGINSWITH 'history.report.'"))
+        XCTAssertTrue(rows.firstMatch.waitForExistence(timeout: 5))
+        XCTAssertEqual(rows.count, 2)
+
+        var locked = 0
+        var shareable = 0
+        for index in 0..<rows.count {
+            rows.element(boundBy: index).tap()
+            XCTAssertTrue(app.staticTexts["export.shortCode"].waitForExistence(timeout: 5))
+            if app.buttons["export.share"].exists {
+                shareable += 1
+            } else {
+                XCTAssertTrue(app.buttons["export.unlock"].exists)
+                locked += 1
+            }
+            app.buttons["export.done"].tap()
+            XCTAssertTrue(propertyRow(app).waitForExistence(timeout: 5))
+            propertyRow(app).tap()
+            XCTAssertTrue(rows.firstMatch.waitForExistence(timeout: 5))
+        }
+        XCTAssertEqual(locked, 1)
+        XCTAssertEqual(shareable, 1)
     }
 
     @MainActor

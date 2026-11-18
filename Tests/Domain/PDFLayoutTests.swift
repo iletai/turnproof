@@ -79,6 +79,21 @@ struct PDFLayoutTests {
         #expect(data.count > 1_000)
     }
 
+    @Test func signaturePageCarriesTheDrawnImages() {
+        let packet = packet(rooms: [("kitchen", 1)])
+        let payload = Data([0x89, 0x50, 0x4e, 0x47])
+        let layout = renderer.layout(for: packet, digest: "digest", pageCount: 0,
+                                     signatures: ["c": payload])
+        let tenant = layout.flatMap(\.blocks).first {
+            $0.kind == .signature && $0.text == "c"
+        }
+        #expect(tenant?.payload == payload)
+    }
+
+    @Test func datesPrintInUTC() {
+        #expect(ReportPDFRenderer.date(clock) == "9 Oct 2025, 08:53 UTC")
+    }
+
     @Test func footerShowsShortCodeAndPageNumbers() {
         let layout = renderer.layout(for: packet(rooms: [("kitchen", 1)]), digest: "a1b2c3d4e5f6",
                                      pageCount: 3)

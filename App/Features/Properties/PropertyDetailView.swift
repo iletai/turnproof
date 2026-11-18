@@ -65,7 +65,13 @@ struct PropertyDetailView: View {
                     } else {
                         VStack(spacing: 0) {
                             ForEach(sealedReports(for: inspections), id: \.id) { report in
-                                historyRow(report)
+                                Button {
+                                    router.push(.export(report.inspectionID))
+                                } label: {
+                                    historyRow(report)
+                                }
+                                .buttonStyle(.plain)
+                                .accessibilityIdentifier("history.report.\(report.id.uuidString)")
                                 Hairline()
                             }
                         }

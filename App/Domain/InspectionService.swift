@@ -81,8 +81,10 @@ struct InspectionService: Sendable {
         )
     }
 
-    func seal(_ inspection: Inspection, rooms: [Room], findings: [Finding],
-              signatures: [Signature]) throws -> Date {
+    /// Every rule the seal applies, without mutating the inspection, so the caller can render
+    /// the packet first and only then commit the seal.
+    func validateSeal(_ inspection: Inspection, rooms: [Room], findings: [Finding],
+                      signatures: [Signature]) throws {
         guard inspection.status == .draft else { throw InspectionError.sealed }
         let issues = validation(rooms: rooms, findings: findings, signatures: signatures)
         if issues.contains(where: { if case .tooManyPhotos = $0 { true } else { false } }) {
@@ -95,6 +97,11 @@ struct InspectionService: Sendable {
             throw InspectionError.blocked
         }
         guard issues.isEmpty else { throw InspectionError.blocked }
+    }
+
+    func seal(_ inspection: Inspection, rooms: [Room], findings: [Finding],
+              signatures: [Signature]) throws -> Date {
+        try validateSeal(inspection, rooms: rooms, findings: findings, signatures: signatures)
         let sealedAt = clock()
         inspection.status = .sealed
         inspection.sealedAt = sealedAt
