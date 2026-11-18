@@ -1,1 +1,30 @@
-Mô tả đầy đủ: app làm gì, cho ai, tính năng chính.
+Turnproofs biến buổi kiểm tra nhà thuê từng phòng thành biên bản hiện trạng mà chủ nhà và người thuê ký ngay tại chỗ. Chụp ảnh từng phòng, ghi tình trạng, đánh dấu hư hỏng, hai bên ký, rồi ứng dụng niêm phong thành PDF kèm mã băm SHA-256 để bàn giao ngay trong ngày.
+
+Một bộ biên bản, không phải đống ảnh rời
+- Phòng, hạng mục và thời gian được giữ đúng thứ tự.
+- Mỗi hạng mục có một ảnh, tình trạng (tốt, tạm được, hư hỏng) và ghi chú tuỳ chọn.
+- Hạng mục đánh dấu hư hỏng phải có ghi chú trước khi niêm phong.
+- Màn hình xem lại cho biết còn thiếu gì trước khi ký.
+
+Hai bên cùng ký
+- Người thuê và chủ nhà ký trên cùng một điện thoại, ngay trong ứng dụng.
+- Trang chữ ký in cả hai chữ ký, họ tên và thời điểm ký.
+
+Niêm phong và kiểm chứng được
+- Khi niêm phong, ứng dụng tính mã băm SHA-256 trên dữ liệu các phòng, ảnh và chữ ký. Mã được in ở trang toàn vẹn, trong siêu dữ liệu PDF và dưới dạng mã QR.
+- Màn hình Kiểm chứng tính lại mã băm ngay trên máy và cho biết có khớp hay không.
+- Biên bản đã niêm phong chỉ đọc. Muốn sửa thì tạo bản điều chỉnh mới.
+
+Riêng tư từ thiết kế
+- Không tài khoản, không phân tích, không quảng cáo, không máy chủ.
+- Dùng được khi không có mạng. Ảnh và biên bản nằm trên thiết bị này, không tải lên đâu cả.
+- Chia sẻ PDF qua AirDrop, Tệp, Mail hoặc bất kỳ nơi nào bạn chọn.
+
+Dùng thử miễn phí
+- Biên bản niêm phong đầu tiên miễn phí, gồm cả xuất và chia sẻ.
+- Turnproofs Pro dành cho các biên bản sau: theo tháng, theo năm hoặc mua một lần vĩnh viễn. Giá hiển thị trong ứng dụng trước khi bạn mua.
+- Gói đăng ký tự động gia hạn trừ khi bạn huỷ ít nhất 24 giờ trước khi hết kỳ. Quản lý hoặc huỷ trong cài đặt tài khoản App Store. Khôi phục giao dịch ngay tại màn hình thanh toán.
+- Mở biên bản đã niêm phong và kiểm tra lại mã băm luôn miễn phí.
+
+Ứng dụng này không phải là gì
+Turnproofs là công cụ lưu hồ sơ. Đây không phải tư vấn pháp lý và không quyết định cách giải quyết tranh chấp tiền cọc.

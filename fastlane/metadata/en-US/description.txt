@@ -1,1 +1,30 @@
-Full description: what the app does, for whom, key features.
+Turnproofs turns a room-by-room rental walkthrough into a condition report that landlord and tenant sign on the spot. Photograph each room, note the condition, flag damage, sign together, and the app seals the packet into a PDF with a SHA-256 digest you can hand over the same day.
+
+A report, not a pile of photos
+- Rooms, findings and timestamps are kept in order.
+- Every finding has a photo, a condition (good, fair, damaged) and an optional note.
+- A damage flag needs a note before the report can be sealed.
+- The review screen shows what is missing before anyone signs.
+
+Signed by both parties
+- Tenant and landlord sign on the same phone, in the app.
+- The signature page prints both signatures, names and signing time.
+
+Sealed and verifiable
+- Sealing computes a SHA-256 digest over the room records, photos and signatures. It is printed on the integrity page, in the PDF metadata and as a QR code.
+- The Verify screen recomputes the digest on your device and tells you whether it matches.
+- A sealed report is read-only. A correction creates a new revision.
+
+Private by design
+- No account, no analytics, no ads, no server.
+- Works offline. Photos and reports stay on this device; nothing is uploaded.
+- Share the PDF with AirDrop, Files, Mail or any share target you choose.
+
+Free to try
+- Your first sealed report is free, including export and sharing.
+- Turnproofs Pro covers every later report: monthly, yearly or a one-time lifetime purchase. Prices are shown in the app before you buy.
+- Subscriptions renew automatically unless cancelled at least 24 hours before the period ends. Manage or cancel in your App Store account settings. Restore purchases from the paywall.
+- Opening a sealed report and re-checking its digest is always free.
+
+What it is not
+Turnproofs is a record-keeping tool. It is not legal advice, and it does not decide how a deposit dispute is settled.

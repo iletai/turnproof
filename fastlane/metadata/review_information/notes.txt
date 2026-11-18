@@ -1,1 +1,1 @@
-Explain anything the reviewer needs: demo account, sample data, sandbox purchase steps.
+No account or sign-in is needed. Launch the app, tap "Start inspection", add a unit, then record each room (on a device without a camera use the photo Library), have both parties draw a signature, and tap Seal. The first sealed report exports for free; the second export shows the paywall. Test purchases use the App Store sandbox: Turnproofs Pro monthly, yearly and lifetime. The app makes no network requests besides StoreKit.
