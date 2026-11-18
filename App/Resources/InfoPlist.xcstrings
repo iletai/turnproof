@@ -1,7 +1,38 @@
 {
-  "sourceLanguage" : "vi",
+  "sourceLanguage" : "en",
   "strings" : {
-
+    "NSCameraUsageDescription" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Turnproof uses the camera to photograph each room's condition. Photos stay on this device."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Turnproof dùng camera để chụp hiện trạng từng phòng. Ảnh chỉ lưu trên máy này."
+          }
+        }
+      }
+    },
+    "NSPhotoLibraryUsageDescription" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Turnproof imports a photo from your library when the camera is unavailable. Photos stay on this device."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Turnproof nhập một ảnh từ thư viện khi không dùng được camera. Ảnh chỉ lưu trên máy này."
+          }
+        }
+      }
+    }
   },
   "version" : "1.0"
 }
