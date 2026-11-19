@@ -28,3 +28,5 @@ build/
 
 ## Local xcconfig secrets
 Config/Secrets.xcconfig
+docs/brand/raw/
+fastlane/screenshots/

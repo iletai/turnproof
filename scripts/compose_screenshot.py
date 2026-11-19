@@ -300,7 +300,7 @@ def draw_device_frame(img: Image.Image, device_config: dict, screenshot: Image.I
 
     # Scale to fit within the background (leave padding for text)
     bg_w, bg_h = img.size
-    max_device_h = int(bg_h * 0.72)  # device takes up 72% of height
+    max_device_h = int(bg_h * 0.78)  # device takes up 78% of height
     max_device_w = int(bg_w * 0.88)
 
     scale = min(max_device_h / frame_h, max_device_w / frame_w, 1.0)
@@ -311,7 +311,7 @@ def draw_device_frame(img: Image.Image, device_config: dict, screenshot: Image.I
     # Center horizontally, position in lower portion
     x = (bg_w - new_w) // 2
     y = bg_h - new_h - int(bg_h * 0.04)  # 4% bottom padding
-    y = max(y, int(bg_h * 0.28))  # don't overlap title area
+    y = max(y, int(bg_h * 0.20))  # don't overlap title area
 
     # Soft drop shadow behind the device for depth separation
     if shadow:
