@@ -12,6 +12,13 @@ extension XCTestCase {
         XCTAssertTrue(start.waitForExistence(timeout: 10))
         start.tap()
 
+        // Landlord is the lowest field: fill it before any keyboard is up. In the vi run the taller keyboard
+        // hid it and it dropped out of the hierarchy when tapped after the other fields.
+        let landlordField = app.textFields["property.field.landlord"]
+        XCTAssertTrue(landlordField.waitForExistence(timeout: 5))
+        landlordField.tap()
+        landlordField.typeText(landlord)
+
         let labelField = app.textFields["property.field.label"]
         XCTAssertTrue(labelField.waitForExistence(timeout: 5))
         labelField.tap()
@@ -22,12 +29,6 @@ extension XCTestCase {
             app.textFields["property.field.unit"].tap()
             app.textFields["property.field.unit"].typeText(unit)
         }
-        // In the vi run this field stopped matching `.textFields` once focused, so match by identifier only.
-        let landlordField = app.descendants(matching: .any).matching(identifier: "property.field.landlord").firstMatch
-        XCTAssertTrue(landlordField.waitForExistence(timeout: 5))
-        landlordField.tap()
-        XCTAssertTrue(landlordField.waitForExistence(timeout: 5), app.debugDescription)
-        landlordField.typeText(landlord)
         app.buttons["property.save"].tap()
 
         XCTAssertTrue(propertyRow(app).waitForExistence(timeout: 5))
