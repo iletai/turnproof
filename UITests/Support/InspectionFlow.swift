@@ -26,7 +26,7 @@ extension XCTestCase {
         let landlordField = app.descendants(matching: .any).matching(identifier: "property.field.landlord").firstMatch
         XCTAssertTrue(landlordField.waitForExistence(timeout: 5))
         landlordField.tap()
-        XCTAssertTrue(landlordField.waitForExistence(timeout: 5))
+        XCTAssertTrue(landlordField.waitForExistence(timeout: 5), app.debugDescription)
         landlordField.typeText(landlord)
         app.buttons["property.save"].tap()
 
