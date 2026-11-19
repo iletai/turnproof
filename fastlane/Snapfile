@@ -1,6 +1,6 @@
 # 6.9" is the only size App Store Connect requires; smaller sizes are scaled from it.
 devices(["iPhone 17 Pro Max"])
-languages(["vi", "en-US"])
+languages((ENV["SNAP_LANGUAGES"] || "vi,en-US").split(","))
 scheme("Turnproof-Dev")
 only_testing(["TurnproofUITests/SnapshotUITests"])
 output_directory("./fastlane/screenshots")

@@ -22,8 +22,12 @@ extension XCTestCase {
             app.textFields["property.field.unit"].tap()
             app.textFields["property.field.unit"].typeText(unit)
         }
-        app.textFields["property.field.landlord"].tap()
-        app.textFields["property.field.landlord"].typeText(landlord)
+        let landlordField = app.textFields["property.field.landlord"]
+        // The vi run lost this field between tap and typeText, so wait for it to settle.
+        XCTAssertTrue(landlordField.waitForExistence(timeout: 5))
+        landlordField.tap()
+        XCTAssertTrue(landlordField.waitForExistence(timeout: 5))
+        landlordField.typeText(landlord)
         app.buttons["property.save"].tap()
 
         XCTAssertTrue(propertyRow(app).waitForExistence(timeout: 5))

@@ -3,6 +3,10 @@ name: Screenshots
 # Raw store captures from SnapshotUITests; composing and uploading to ASC stay separate, reviewed steps.
 on:
   workflow_dispatch:
+    inputs:
+      languages:
+        description: Comma list of Snapfile languages
+        default: vi,en-US
 
 jobs:
   capture:
@@ -24,6 +28,7 @@ jobs:
       - name: Capture
         run: bundle exec fastlane screenshots --env prod upload:false
         env:
+          SNAP_LANGUAGES: ${{ inputs.languages }}
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
           ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
           ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
