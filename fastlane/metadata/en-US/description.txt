@@ -28,3 +28,6 @@ Free to try
 
 What it is not
 Turnproofs is a record-keeping tool. It is not legal advice, and it does not decide how a deposit dispute is settled.
+
+Terms of Use (EULA): https://www.apple.com/legal/internet-services/itunes/dev/stdeula/
+Privacy Policy: https://apps-site-six.vercel.app/apps/turnproof/privacy
