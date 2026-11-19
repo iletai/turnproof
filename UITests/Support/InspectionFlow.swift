@@ -22,8 +22,8 @@ extension XCTestCase {
             app.textFields["property.field.unit"].tap()
             app.textFields["property.field.unit"].typeText(unit)
         }
-        let landlordField = app.textFields["property.field.landlord"]
-        // The vi run lost this field between tap and typeText, so wait for it to settle.
+        // In the vi run this field stopped matching `.textFields` once focused, so match by identifier only.
+        let landlordField = app.descendants(matching: .any).matching(identifier: "property.field.landlord").firstMatch
         XCTAssertTrue(landlordField.waitForExistence(timeout: 5))
         landlordField.tap()
         XCTAssertTrue(landlordField.waitForExistence(timeout: 5))
