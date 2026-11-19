@@ -1,0 +1,9 @@
+[
+  {"screenshot": "raw/vi/01-properties.png", "title": "Mọi căn nhà, một nơi", "subtitle": "Gom mỗi căn và biên bản của nó lại cùng nhau", "gradient": "midight-blue", "device": "iphone-17-pro", "filename": "01-properties.png"},
+  {"screenshot": "raw/vi/02-rooms.png", "title": "Kiểm tra từng phòng", "subtitle": "Danh sách cho thấy phòng nào còn thiếu", "gradient": "deep-space", "device": "iphone-17-pro", "filename": "02-rooms.png"},
+  {"screenshot": "raw/vi/03-capture.png", "title": "Ảnh, tình trạng, ghi chú", "subtitle": "Đánh dấu hư hỏng kèm ghi chú đi cùng", "gradient": "graphite", "device": "iphone-17-pro", "filename": "03-capture.png"},
+  {"screenshot": "raw/vi/04-review.png", "title": "Thấy ngay chỗ còn thiếu", "subtitle": "Xem lại trước khi ai ký", "gradient": "midight-blue", "device": "iphone-17-pro", "filename": "04-review.png"},
+  {"screenshot": "raw/vi/05-sign.png", "title": "Hai bên cùng ký", "subtitle": "Người thuê và chủ nhà ký ngay trên một máy", "gradient": "deep-space", "device": "iphone-17-pro", "filename": "05-sign.png"},
+  {"screenshot": "raw/vi/06-export.png", "title": "Niêm phong thành PDF", "subtitle": "Mã băm SHA-256 để bàn giao ngay trong ngày", "gradient": "graphite", "device": "iphone-17-pro", "filename": "06-export.png"},
+  {"screenshot": "raw/vi/07-verify.png", "title": "Xác minh bất cứ lúc nào", "subtitle": "Tính lại ngay trên máy, không tải gì lên", "gradient": "midight-blue", "device": "iphone-17-pro", "filename": "07-verify.png"}
+]
