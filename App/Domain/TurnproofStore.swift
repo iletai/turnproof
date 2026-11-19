@@ -4,6 +4,7 @@ import SwiftData
 enum RepositoryError: Error, Equatable {
     case invalidLabel
     case invalidAddress
+    case saveFailed
 }
 
 @MainActor
@@ -40,8 +41,16 @@ final class TurnproofStore {
         return try ModelContainer(for: schema, configurations: [configuration])
     }
 
-    func save() {
-        try? context.save()
+    /// Returns false (and logs) when the write fails; callers that must not lie to the user check it.
+    @discardableResult
+    func save() -> Bool {
+        do {
+            try context.save()
+            return true
+        } catch {
+            Log.store.error("Save failed: \(error)")
+            return false
+        }
     }
 
     // MARK: Properties

@@ -168,8 +168,13 @@ final class AppModel {
         let pages = renderer.layout(for: packet, digest: digest, pageCount: 0,
                                     signatures: signaturePayloads).count
 
+        let previousStatus = inspection.status
         inspection.status = .sealed
-        store.save()
+        guard store.save() else {
+            inspection.status = previousStatus
+            inspection.sealedAt = nil
+            throw RepositoryError.saveFailed
+        }
         let report = SealedReport(inspectionID: inspection.id, revision: inspection.revision,
                                   generatedAt: sealedAt, sha256: digest,
                                   pageCount: pages, pdfData: pdf,
