@@ -70,6 +70,37 @@ final nonisolated class SnapshotUITests: XCTestCase {
         capture("07-verify")
     }
 
+    /// The paywall is only reachable by sealing a second report; its capture feeds the ASC purchase review screenshot.
+    @MainActor
+    func testCapturePaywall() throws {
+        let app = XCUIApplication.turnproof()
+        setupSnapshot(app)
+        app.launch()
+        addProperty(app)
+        for report in 1 ... 2 {
+            if report == 2 {
+                propertyRow(app).tap()
+                app.buttons["inspection.new"].tap()
+            } else {
+                startInspection(app)
+            }
+            recordAllRooms(app)
+            openReview(app)
+            openSign(app)
+            sign(app, identifier: "sign.tenant")
+            sign(app, identifier: "sign.landlord")
+            app.buttons["sign.seal"].tap()
+            if report == 1 {
+                XCTAssertTrue(app.buttons["export.share"].waitForExistence(timeout: 20))
+                app.buttons["export.done"].tap()
+            }
+        }
+        XCTAssertTrue(app.buttons["paywall.dismiss"].waitForExistence(timeout: 10))
+        // Give StoreKit time to load the plans before the capture.
+        sleep(5)
+        capture("08-paywall")
+    }
+
     /// Clears any PNG from an earlier run so the assertions prove this run wrote the file.
     @MainActor
     private func capture(_ name: String) {
