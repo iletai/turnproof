@@ -10,4 +10,4 @@ CODE_SIGN_ENTITLEMENTS = Config/Entitlements/Turnproof-Staging.entitlements
 SWIFT_ACTIVE_COMPILATION_CONDITIONS = $(inherited) STAGING
 DEBUG_INFORMATION_FORMAT = dwarf-with-dsym
 // Staging ASC record's subscription group id (App Store Connect → Subscriptions).
-SUBSCRIPTION_GROUP_ID =
+SUBSCRIPTION_GROUP_ID = 22594119

@@ -9,4 +9,4 @@ CODE_SIGN_ENTITLEMENTS = Config/Entitlements/Turnproof-Prod.entitlements
 SWIFT_ACTIVE_COMPILATION_CONDITIONS = $(inherited) PROD
 DEBUG_INFORMATION_FORMAT = dwarf-with-dsym
 // Prod ASC record's subscription group id (App Store Connect → Subscriptions).
-SUBSCRIPTION_GROUP_ID =
+SUBSCRIPTION_GROUP_ID = 22594201

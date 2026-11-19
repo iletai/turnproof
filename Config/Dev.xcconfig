@@ -9,4 +9,4 @@ CODE_SIGN_ENTITLEMENTS = Config/Entitlements/Turnproof-Dev.entitlements
 SWIFT_ACTIVE_COMPILATION_CONDITIONS = $(inherited) DEV
 APP_STORE_URL =
 // Dev ASC record's subscription group id; keep App/StoreKit/Products.storekit's group id identical.
-SUBSCRIPTION_GROUP_ID = 21000001
+SUBSCRIPTION_GROUP_ID = 22594259

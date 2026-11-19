@@ -1,40 +1,94 @@
 {
-  "identifier" : "9C1E2A10",
-  "nonRenewingSubscriptions" : [],
-  "products" : [
+  "identifier": "9C1E2A10",
+  "nonRenewingSubscriptions": [],
+  "products": [
     {
-      "displayPrice" : "29.99",
-      "familyShareable" : false,
-      "internalID" : "6400000001",
-      "localizations" : [ { "description" : "Lifetime Pro", "displayName" : "Lifetime", "locale" : "en_US" } ],
-      "productID" : "com.iletai.turnproof.dev.pro.lifetime",
-      "referenceName" : "Lifetime",
-      "type" : "NonConsumable"
-    }
-  ],
-  "settings" : { "_failTransactionsEnabled" : false },
-  "subscriptionGroups" : [
-    {
-      "id" : "21000001",
-      "localizations" : [],
-      "name" : "Pro",
-      "subscriptions" : [
+      "displayPrice": "29.99",
+      "familyShareable": false,
+      "internalID": "6400000001",
+      "localizations": [
         {
-          "adHocOffers" : [], "codeOffers" : [], "displayPrice" : "2.99", "familyShareable" : false,
-          "groupNumber" : 1, "internalID" : "6400000002", "introductoryOffer" : null,
-          "localizations" : [ { "description" : "Monthly Pro", "displayName" : "Monthly", "locale" : "en_US" } ],
-          "productID" : "com.iletai.turnproof.dev.pro.monthly", "recurringSubscriptionPeriod" : "P1M", "referenceName" : "Monthly",
-          "subscriptionGroupID" : "21000001", "type" : "RecurringSubscription"
+          "description": "Lifetime Pro",
+          "displayName": "Lifetime",
+          "locale": "en_US"
         },
         {
-          "adHocOffers" : [], "codeOffers" : [], "displayPrice" : "19.99", "familyShareable" : false,
-          "groupNumber" : 1, "internalID" : "6400000003", "introductoryOffer" : null,
-          "localizations" : [ { "description" : "Yearly Pro", "displayName" : "Yearly", "locale" : "en_US" } ],
-          "productID" : "com.iletai.turnproof.dev.pro.yearly", "recurringSubscriptionPeriod" : "P1Y", "referenceName" : "Yearly",
-          "subscriptionGroupID" : "21000001", "type" : "RecurringSubscription"
+          "description": "Pro trọn đời",
+          "displayName": "Vĩnh viễn",
+          "locale": "vi"
+        }
+      ],
+      "productID": "com.iletai.turnproof.dev.pro.lifetime",
+      "referenceName": "Lifetime",
+      "type": "NonConsumable"
+    }
+  ],
+  "settings": {
+    "_failTransactionsEnabled": false
+  },
+  "subscriptionGroups": [
+    {
+      "id": "22594259",
+      "localizations": [],
+      "name": "Pro",
+      "subscriptions": [
+        {
+          "adHocOffers": [],
+          "codeOffers": [],
+          "displayPrice": "2.99",
+          "familyShareable": false,
+          "groupNumber": 1,
+          "internalID": "6400000002",
+          "introductoryOffer": null,
+          "localizations": [
+            {
+              "description": "Monthly Pro",
+              "displayName": "Monthly",
+              "locale": "en_US"
+            },
+            {
+              "description": "Pro theo tháng",
+              "displayName": "Hàng tháng",
+              "locale": "vi"
+            }
+          ],
+          "productID": "com.iletai.turnproof.dev.pro.monthly",
+          "recurringSubscriptionPeriod": "P1M",
+          "referenceName": "Monthly",
+          "subscriptionGroupID": "22594259",
+          "type": "RecurringSubscription"
+        },
+        {
+          "adHocOffers": [],
+          "codeOffers": [],
+          "displayPrice": "19.99",
+          "familyShareable": false,
+          "groupNumber": 1,
+          "internalID": "6400000003",
+          "introductoryOffer": null,
+          "localizations": [
+            {
+              "description": "Yearly Pro",
+              "displayName": "Yearly",
+              "locale": "en_US"
+            },
+            {
+              "description": "Pro theo năm",
+              "displayName": "Hàng năm",
+              "locale": "vi"
+            }
+          ],
+          "productID": "com.iletai.turnproof.dev.pro.yearly",
+          "recurringSubscriptionPeriod": "P1Y",
+          "referenceName": "Yearly",
+          "subscriptionGroupID": "22594259",
+          "type": "RecurringSubscription"
         }
       ]
     }
   ],
-  "version" : { "major" : 3, "minor" : 0 }
+  "version": {
+    "major": 3,
+    "minor": 0
+  }
 }
