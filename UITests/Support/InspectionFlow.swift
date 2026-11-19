@@ -83,7 +83,7 @@ extension XCTestCase {
         let next = app.buttons["review.next"]
         XCTAssertTrue(next.waitForExistence(timeout: 5))
         next.tap()
-        XCTAssertTrue(app.staticTexts["Review before signing"].waitForExistence(timeout: 5),
+        XCTAssertTrue(app.staticTexts["review.issue.1"].waitForExistence(timeout: 5),
                       app.debugDescription)
     }
 
