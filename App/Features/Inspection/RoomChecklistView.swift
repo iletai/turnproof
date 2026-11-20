@@ -12,106 +12,117 @@ struct RoomChecklistView: View {
                let property = model.property(id: inspection.propertyID) {
                 content(inspection, property)
             } else {
-                Text("Inspection not found")
-                    .font(TPType.body())
-                    .foregroundStyle(TPColor.inkSecondary)
+                ContentUnavailableView("Inspection not found", systemImage: "doc.questionmark")
             }
         }
-        .background(TPColor.paper.ignoresSafeArea())
-        .toolbar(.hidden, for: .navigationBar)
+        .background(TPColor.background)
     }
 
     private func content(_ inspection: Inspection, _ property: Property) -> some View {
         let rooms = model.rooms(for: inspection)
         let done = rooms.filter { !model.findings(room: $0).isEmpty }.count
-        return VStack(spacing: 0) {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 0) {
-                    Button {
-                        router.pop()
-                    } label: {
-                        Image(systemName: "chevron.left")
-                            .font(.system(.body, weight: .semibold))
-                            .foregroundStyle(TPColor.ink)
-                            .frame(width: 44, height: 44, alignment: .leading)
+        return List {
+            Section {
+                VStack(alignment: .leading, spacing: 8) {
+                    ViewThatFits(in: .horizontal) {
+                        HStack {
+                            Text("\(done) of \(rooms.count) rooms").font(.headline).monospacedDigit()
+                            Spacer()
+                            photoCount(inspection)
+                        }
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text("\(done) of \(rooms.count) rooms").font(.headline).monospacedDigit()
+                            photoCount(inspection)
+                        }
                     }
-                    .accessibilityIdentifier("nav.back")
-
-                    Eyebrow(text: property.label)
-                    Text("\(inspection.kind.title) inspection")
-                        .font(TPType.display())
-                        .foregroundStyle(TPColor.ink)
-                    Text("\(done) of \(rooms.count) rooms recorded · \(model.findings(for: inspection).count) photos")
-                        .font(TPType.small())
-                        .foregroundStyle(TPColor.inkSecondary)
-                        .padding(.top, 4)
-
-                    progress(done: done, total: rooms.count)
-                        .padding(.top, 16)
-                        .padding(.bottom, 8)
-
-                    ForEach(rooms, id: \.id) { room in
-                        roomRow(room, inspection: inspection)
-                        Hairline()
-                    }
+                    ProgressView(value: Double(done), total: Double(max(rooms.count, 1)))
                 }
-                .padding(.horizontal, TPSpacing.gutter)
-                .padding(.bottom, 24)
+                .padding(.vertical, 4)
             }
-            BottomBar {
-                Button("Review & sign") {
-                    router.push(.review(inspection.id))
+
+            Section {
+                ForEach(rooms, id: \.id) { room in
+                    roomRow(room, inspection: inspection)
                 }
-                .buttonStyle(TPPrimaryButtonStyle())
-                .accessibilityIdentifier("review.next")
+            } header: {
+                Text("Rooms")
+            } footer: {
+                Text("Tap a room to take photos. Every room needs at least one photo.")
             }
+        }
+        .listStyle(.insetGrouped)
+        .navigationTitle(inspection.kind.title)
+        .navigationBarTitleDisplayMode(.inline)
+        .navigationBarBackButtonHidden()
+        .toolbar {
+            ToolbarItem(placement: .topBarLeading) {
+                Button {
+                    router.pop()
+                } label: {
+                    Label(property.label, systemImage: "chevron.left")
+                        .labelStyle(.titleAndIcon)
+                }
+                .accessibilityIdentifier("nav.back")
+            }
+        }
+        .bottomActionBar {
+            Button("Review & Sign") {
+                router.push(.review(inspection.id))
+            }
+            .primaryActionStyle()
+            .accessibilityIdentifier("review.next")
         }
     }
 
-    private func progress(done: Int, total: Int) -> some View {
-        GeometryReader { proxy in
-            ZStack(alignment: .leading) {
-                Rectangle().fill(TPColor.hairline)
-                Rectangle().fill(TPColor.ink)
-                    .frame(width: total == 0 ? 0 : proxy.size.width * CGFloat(done) / CGFloat(total))
-            }
-        }
-        .frame(height: 4)
+    private func photoCount(_ inspection: Inspection) -> some View {
+        Text("\(model.findings(for: inspection).count) photos")
+            .font(.subheadline)
+            .foregroundStyle(TPColor.textSecondary)
+            .monospacedDigit()
     }
 
     private func roomRow(_ room: Room, inspection: Inspection) -> some View {
         let findings = model.findings(room: room)
-        let damaged = findings.filter { $0.isDamageFlagged }.count
+        let needsNote = findings.contains { $0.isDamageFlagged && $0.note.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty }
         return Button {
             router.push(.capture(inspection: inspection.id, room: room.id))
         } label: {
             HStack(spacing: 12) {
-                Text(String(format: "%02d", room.order + 1))
-                    .font(TPType.mono())
-                    .foregroundStyle(TPColor.inkTertiary)
-                    .frame(width: 24, alignment: .leading)
-                VStack(alignment: .leading, spacing: 4) {
+                statusGlyph(isEmpty: findings.isEmpty, needsNote: needsNote)
+                VStack(alignment: .leading, spacing: 2) {
                     Text(room.name)
-                        .font(TPType.heading(17))
-                        .foregroundStyle(TPColor.ink)
-                    Text(findings.isEmpty ? "No photos yet" : "\(findings.count) photos")
-                        .font(TPType.small())
-                        .foregroundStyle(TPColor.inkSecondary)
+                        .foregroundStyle(TPColor.textPrimary)
+                    if needsNote {
+                        Text("Damaged item needs a note")
+                            .font(.footnote)
+                            .foregroundStyle(TPColor.textSecondary)
+                    }
                 }
-                Spacer()
-                if damaged > 0 {
-                    StatusChip(text: "\(damaged) damage", color: TPColor.damage, background: TPColor.damageSoft)
-                } else if !findings.isEmpty {
-                    StatusChip(text: "Recorded", color: TPColor.good, background: TPColor.goodSoft)
-                }
+                Spacer(minLength: 8)
+                Text(findings.isEmpty ? "No photos" : "\(findings.count) photos")
+                    .font(.footnote)
+                    .foregroundStyle(TPColor.textSecondary)
                 Image(systemName: "chevron.right")
-                    .font(.system(.caption, weight: .semibold))
-                    .foregroundStyle(TPColor.inkTertiary)
+                    .font(.footnote.weight(.semibold))
+                    .foregroundStyle(.tertiary)
             }
-            .padding(.vertical, 14)
+            .frame(minHeight: 44)
             .contentShape(Rectangle())
         }
-        .buttonStyle(.plain)
         .accessibilityIdentifier("room.\(room.templateKey)")
+    }
+
+    @ViewBuilder private func statusGlyph(isEmpty: Bool, needsNote: Bool) -> some View {
+        Group {
+            if needsNote {
+                Image(systemName: "exclamationmark.triangle.fill").foregroundStyle(TPColor.fair)
+            } else if isEmpty {
+                Image(systemName: "circle").foregroundStyle(TPColor.textSecondary)
+            } else {
+                Image(systemName: "checkmark.circle.fill").foregroundStyle(TPColor.good)
+            }
+        }
+        .font(.title3)
+        .accessibilityHidden(true)
     }
 }

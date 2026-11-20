@@ -22,13 +22,10 @@ struct SignView: View {
             if let inspection = model.inspection(id: inspectionID) {
                 content(inspection)
             } else {
-                Text("Inspection not found")
-                    .font(TPType.body())
-                    .foregroundStyle(TPColor.inkSecondary)
+                ContentUnavailableView("Inspection not found", systemImage: "doc.questionmark")
             }
         }
-        .background(TPColor.paper.ignoresSafeArea())
-        .toolbar(.hidden, for: .navigationBar)
+        .background(TPColor.background)
         .sheet(isPresented: $showPaywall) {
             PaywallScreen {
                 showPaywall = false
@@ -41,115 +38,131 @@ struct SignView: View {
     private func content(_ inspection: Inspection) -> some View {
         let sealed = inspection.status == .sealed
         let signed = model.signatures(for: inspection)
-        return VStack(spacing: 0) {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 16) {
-                    Button {
-                        router.pop()
-                    } label: {
-                        Image(systemName: "chevron.left")
-                            .font(.system(.body, weight: .semibold))
-                            .foregroundStyle(TPColor.ink)
-                            .frame(width: 44, height: 44, alignment: .leading)
-                    }
-                    .accessibilityIdentifier("nav.back")
+        return List {
+            Section {
+                Text(attestation(inspection))
+            } header: {
+                Text("What you are signing")
+            } footer: {
+                Text("This is a record of condition, not legal advice.")
+            }
 
-                    Eyebrow(text: "On this device")
-                    Text("Both parties sign")
-                        .font(TPType.display())
-                        .foregroundStyle(TPColor.ink)
-                    Text("Sign with a finger inside each box. The signatures are drawn at \(inspection.kind.title.lowercased()) and hashed into the packet.")
-                        .font(TPType.small())
-                        .foregroundStyle(TPColor.inkSecondary)
+            if sealed {
+                sealedNotice(inspection)
+            } else {
+                signatureSection(title: inspection.tenantName.isEmpty ? String(localized: "Tenant")
+                                     : String(localized: "Tenant · \(inspection.tenantName)"),
+                                 identifier: "sign.tenant", value: $tenantPNG, reset: $tenantCanvas,
+                                 existing: signed.first { $0.role == .tenant })
+                signatureSection(title: landlordTitle(inspection),
+                                 identifier: "sign.landlord", value: $landlordPNG, reset: $landlordCanvas,
+                                 existing: signed.first { $0.role == .landlord })
 
-                    if sealed {
-                        sealedNotice(inspection)
-                    } else {
-                        signatureBlock(title: "Tenant", identifier: "sign.tenant",
-                                       role: .tenant, value: $tenantPNG, reset: $tenantCanvas,
-                                       existing: signed.first { $0.role == .tenant })
-                        signatureBlock(title: "Landlord", identifier: "sign.landlord",
-                                       role: .landlord, value: $landlordPNG, reset: $landlordCanvas,
-                                       existing: signed.first { $0.role == .landlord })
-
-                        if let errorText {
-                            Text(errorText)
-                                .font(TPType.small())
-                                .foregroundStyle(TPColor.damage)
-                                .accessibilityIdentifier("sign.error")
+                if let errorText {
+                    Section {
+                        Label {
+                            Text(errorText).accessibilityIdentifier("sign.error")
+                        } icon: {
+                            Image(systemName: "exclamationmark.triangle.fill").foregroundStyle(TPColor.damage)
                         }
                     }
                 }
-                .padding(.horizontal, TPSpacing.gutter)
-                .padding(.bottom, 24)
-            }
-            BottomBar {
-                Button(sealed ? "View sealed report" : "Seal report") {
-                    if sealed {
-                        router.push(.export(inspection.id))
-                    } else {
-                        seal(inspection)
-                    }
-                }
-                .buttonStyle(TPPrimaryButtonStyle())
-                .disabled(isSealing || (!sealed && (tenantPNG == nil || landlordPNG == nil)))
-                .accessibilityIdentifier("sign.seal")
             }
         }
+        .listStyle(.insetGrouped)
+        .navigationTitle("Sign")
+        .navigationBarTitleDisplayMode(.inline)
+        .navigationBarBackButtonHidden()
+        .toolbar {
+            ToolbarItem(placement: .topBarLeading) {
+                Button {
+                    router.pop()
+                } label: {
+                    Label("Review", systemImage: "chevron.left")
+                        .labelStyle(.titleAndIcon)
+                }
+                .accessibilityIdentifier("nav.back")
+            }
+        }
+        .bottomActionBar {
+            Button {
+                if sealed {
+                    router.push(.export(inspection.id))
+                } else {
+                    seal(inspection)
+                }
+            } label: {
+                Label(sealed ? "View Sealed Report" : "Seal Report", systemImage: "checkmark.seal")
+            }
+            .primaryActionStyle()
+            .disabled(isSealing || (!sealed && (tenantPNG == nil || landlordPNG == nil)))
+            .accessibilityIdentifier("sign.seal")
+        }
+    }
+
+    private func attestation(_ inspection: Inspection) -> String {
+        let place = model.property(id: inspection.propertyID)?.label ?? ""
+        let date = inspection.startedAt.formatted(date: .abbreviated, time: .omitted)
+        let photos = model.findings(for: inspection).count
+        let rooms = model.rooms(for: inspection).count
+        return String(localized: "We walked through \(place) together on \(date) and reviewed \(photos) photos across \(rooms) rooms. This report records the condition we observed.")
+    }
+
+    private func landlordTitle(_ inspection: Inspection) -> String {
+        guard let name = model.property(id: inspection.propertyID)?.landlordName, !name.isEmpty else {
+            return String(localized: "Landlord")
+        }
+        return String(localized: "Landlord · \(name)")
     }
 
     private func sealedNotice(_ inspection: Inspection) -> some View {
-        TPCard {
-            VStack(alignment: .leading, spacing: 8) {
-                StatusChip(text: "sealed", color: TPColor.good, background: TPColor.goodSoft)
-                Text("This report was sealed and cannot be edited.")
-                    .font(TPType.body())
-                    .foregroundStyle(TPColor.ink)
-                if let report = model.latestReport(for: inspection) {
-                    Text(model.integrity.shortCode(report.sha256))
-                        .font(TPType.mono(13))
-                        .foregroundStyle(TPColor.inkSecondary)
+        Section {
+            Label {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("This report was sealed and cannot be edited.")
+                    Text("Corrections create a new revision instead of changing this one.")
+                        .font(.footnote)
+                        .foregroundStyle(TPColor.textSecondary)
                 }
-                Text("Corrections create a new revision instead of changing this one.")
-                    .font(TPType.small())
-                    .foregroundStyle(TPColor.inkSecondary)
+            } icon: {
+                Image(systemName: "checkmark.seal.fill").foregroundStyle(TPColor.good)
+            }
+            if let report = model.latestReport(for: inspection) {
+                LabeledContent("Verification code") {
+                    Text(model.integrity.shortCode(report.sha256)).monospaced()
+                }
             }
         }
     }
 
-    private func signatureBlock(title: String, identifier: String, role: SignatureRole,
-                                value: Binding<Data?>, reset: Binding<Int>,
-                                existing: Signature?) -> some View {
-        VStack(alignment: .leading, spacing: 8) {
-            HStack {
-                Eyebrow(text: title)
-                Spacer()
-                if existing != nil {
-                    StatusChip(text: "signed", color: TPColor.good, background: TPColor.goodSoft)
-                } else if value.wrappedValue != nil {
-                    Text("Drawn").font(TPType.eyebrow()).foregroundStyle(TPColor.inkSecondary)
-                }
-            }
+    private func signatureSection(title: String, identifier: String,
+                                  value: Binding<Data?>, reset: Binding<Int>,
+                                  existing: Signature?) -> some View {
+        Section {
             SignatureCanvas { data in value.wrappedValue = data }
                 .id(reset.wrappedValue)
                 .accessibilityIdentifier(identifier)
                 .accessibilityLabel("\(title) signature")
+                .listRowInsets(EdgeInsets())
+                .listRowBackground(Color.clear)
+        } header: {
             HStack {
+                Text(title)
+                Spacer()
                 Button("Clear") {
                     reset.wrappedValue += 1
                     value.wrappedValue = nil
                 }
-                .font(TPType.small())
-                .foregroundStyle(TPColor.inkSecondary)
+                .font(.footnote)
+                .textCase(nil)
                 .disabled(value.wrappedValue == nil && existing == nil)
                 .accessibilityIdentifier("\(identifier).clear")
-                Spacer()
-                Text(role == .tenant ? "Tenant signs first" : "Landlord countersigns")
-                    .font(TPType.caption())
-                    .foregroundStyle(TPColor.inkTertiary)
+            }
+        } footer: {
+            if let existing {
+                Text("Signed \(existing.signedAt.formatted(date: .omitted, time: .shortened))")
             }
         }
-        .padding(.bottom, 8)
     }
 
     private func seal(_ inspection: Inspection) {

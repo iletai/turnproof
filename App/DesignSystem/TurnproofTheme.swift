@@ -41,6 +41,14 @@ enum TPColor {
 }
 
 extension Condition {
+    var title: String {
+        switch self {
+        case .good: String(localized: "Good")
+        case .fair: String(localized: "Fair")
+        case .damaged: String(localized: "Damaged")
+        }
+    }
+
     /// Shape carries the meaning so condition is never color alone.
     var symbol: String {
         switch self {
@@ -211,5 +219,16 @@ extension Color {
             return v <= 0.03928 ? v / 12.92 : pow((v + 0.055) / 1.055, 2.4)
         }
         return 0.2126 * channel(r) + 0.7152 * channel(g) + 0.0722 * channel(b)
+    }
+}
+
+extension View {
+    /// Liquid Glass for floating controls on iOS 26+, material before that. Never for content rows.
+    @ViewBuilder func floatingControl<S: Shape>(in shape: S) -> some View {
+        if #available(iOS 26, *) {
+            glassEffect(.regular, in: shape)
+        } else {
+            background(.ultraThinMaterial, in: shape)
+        }
     }
 }
