@@ -11,21 +11,29 @@ struct SignatureCanvas: View {
     private static let exportSize = CGSize(width: 600, height: 200)
 
     var body: some View {
+        let shape = RoundedRectangle(cornerRadius: 12, style: .continuous)
         GeometryReader { proxy in
             Canvas { context, size in
                 for stroke in strokes + (current.isEmpty ? [] : [current]) {
-                    context.stroke(path(stroke, in: size), with: .color(TPColor.ink),
+                    context.stroke(path(stroke, in: size), with: .color(TPColor.textPrimary),
                                    style: StrokeStyle(lineWidth: 2, lineCap: .round, lineJoin: .round))
                 }
             }
-            .background(TPColor.paperRaised)
-            .overlay(Rectangle().stroke(TPColor.hairline, lineWidth: 1))
-            .overlay(alignment: .bottomLeading) {
+            .background(TPColor.surface)
+            .overlay(alignment: .bottom) {
                 Rectangle()
-                    .fill(TPColor.hairline)
+                    .fill(TPColor.separator)
                     .frame(height: 1)
                     .padding(.horizontal, 24)
-                    .padding(.bottom, 28)
+                    .padding(.bottom, 24)
+            }
+            .overlay {
+                if strokes.isEmpty && current.isEmpty {
+                    Label("Sign here", systemImage: "signature")
+                        .font(.footnote)
+                        .foregroundStyle(TPColor.textSecondary)
+                        .allowsHitTesting(false)
+                }
             }
             .gesture(
                 DragGesture(minimumDistance: 0)
@@ -41,7 +49,8 @@ struct SignatureCanvas: View {
             )
         }
         .frame(height: 160)
-        .clipShape(RoundedRectangle(cornerRadius: 4))
+        .clipShape(shape)
+        .overlay(shape.stroke(TPColor.separator, lineWidth: 1))
     }
 
     func clear() {

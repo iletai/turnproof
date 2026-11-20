@@ -25,12 +25,11 @@ struct CaptureView: View {
                let room = model.room(id: roomID) {
                 content(inspection, room)
             } else {
-                Text("Room not found")
-                    .font(TPType.body())
-                    .foregroundStyle(TPColor.inkSecondary)
+                ContentUnavailableView("Room not found", systemImage: "camera")
             }
         }
-        .background(TPColor.paper.ignoresSafeArea())
+        .background(Color.black.ignoresSafeArea())
+        .environment(\.colorScheme, .dark)
         .toolbar(.hidden, for: .navigationBar)
         .fullScreenCover(isPresented: $isCameraPresented) {
             CameraPicker { data in save(data, inspection: model.inspection(id: inspectionID),
@@ -52,170 +51,184 @@ struct CaptureView: View {
 
     private func content(_ inspection: Inspection, _ room: Room) -> some View {
         let findings = model.findings(room: room)
-        return VStack(spacing: 0) {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 16) {
-                    header(room, findings: findings)
-                    if let last = findings.last, let image = UIImage(data: last.photoData) {
-                        Image(uiImage: image)
-                            .resizable()
-                            .scaledToFill()
-                            .frame(maxWidth: .infinity)
-                            .frame(height: 220)
-                            .clipped()
-                            .overlay(Rectangle().stroke(TPColor.hairline, lineWidth: 1))
-                            .accessibilityLabel("Latest photo in this room")
-                    }
-                    conditionControl
-                    noteField
-                    damageToggle
-                    if let errorText {
-                        Text(errorText)
-                            .font(TPType.small())
-                            .foregroundStyle(TPColor.damage)
-                            .accessibilityIdentifier("capture.error")
-                    }
-                    if !findings.isEmpty {
-                        Hairline()
-                        Eyebrow(text: "Recorded in this room")
-                        ForEach(Array(findings.enumerated()), id: \.element.id) { index, finding in
-                            findingRow(finding, index: index)
-                            Hairline()
-                        }
-                    }
-                }
-                .padding(.horizontal, TPSpacing.gutter)
-                .padding(.bottom, 24)
+        return VStack(spacing: 12) {
+            topBar(room, count: findings.count)
+            Spacer(minLength: 0)
+            if !findings.isEmpty {
+                recordedStrip(findings)
             }
-            bottomBar(inspection, room: room, count: findings.count)
+            panel(inspection, room: room, findings: findings)
+        }
+        .padding(.horizontal, 16)
+        .padding(.bottom, 8)
+        .background {
+            // Intentional full-bleed media: the latest photo sits under the controls like a camera preview.
+            if let last = findings.last, let image = UIImage(data: last.photoData) {
+                Image(uiImage: image)
+                    .resizable()
+                    .scaledToFill()
+                    .ignoresSafeArea()
+                    .accessibilityLabel("Latest photo in this room")
+            }
         }
     }
 
-    private func header(_ room: Room, findings: [Finding]) -> some View {
-        VStack(alignment: .leading, spacing: 6) {
+    private func topBar(_ room: Room, count: Int) -> some View {
+        HStack(alignment: .top) {
             Button {
                 if isSheet { dismiss() } else { router.pop() }
             } label: {
-                Image(systemName: "chevron.left")
-                    .font(.system(.body, weight: .semibold))
-                    .foregroundStyle(TPColor.ink)
-                    .frame(width: 44, height: 44, alignment: .leading)
+                Image(systemName: "xmark")
+                    .font(.body.weight(.semibold))
+                    .frame(width: 44, height: 44)
+                    .floatingControl(in: Circle())
             }
+            .accessibilityLabel("Close")
             .accessibilityIdentifier("nav.back")
 
-            Eyebrow(text: "Room \(room.order + 1) of \(RoomTemplate.keys.count)")
-            Text(room.name)
-                .font(TPType.display())
-                .foregroundStyle(TPColor.ink)
-            Text("\(findings.count) of \(InspectionService.photoLimit) photos · one photo per finding")
-                .font(TPType.small())
-                .foregroundStyle(TPColor.inkSecondary)
-        }
-    }
-
-    private var conditionControl: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Eyebrow(text: "Condition")
-            HStack(spacing: 8) {
-                ForEach(Condition.allCases, id: \.self) { candidate in
-                    Button {
-                        condition = candidate
-                    } label: {
-                        ConditionChip(condition: candidate, isSelected: condition == candidate)
-                            .overlay(Rectangle().stroke(condition == candidate
-                                                        ? TPColor.tint(for: candidate)
-                                                        : TPColor.hairline,
-                                                        lineWidth: 1))
-                    }
-                    .buttonStyle(.plain)
-                }
-            }
-        }
-    }
-
-    private var noteField: some View {
-        VStack(alignment: .leading, spacing: 6) {
-            Eyebrow(text: "Note")
-            TextField("What the photo shows", text: $note, axis: .vertical)
-                .font(TPType.body())
-                .lineLimit(3, reservesSpace: true)
-                .padding(12)
-                .background(TPColor.paperRaised)
-                .overlay(Rectangle().stroke(TPColor.hairline, lineWidth: 1))
-                .accessibilityIdentifier("capture.note")
-        }
-    }
-
-    private var damageToggle: some View {
-        Toggle(isOn: $flagged) {
-            VStack(alignment: .leading, spacing: 2) {
-                Text("Flag as damage")
-                    .font(TPType.bodyStrong())
-                    .foregroundStyle(TPColor.ink)
-                Text("Damage needs a note before the report can be sealed.")
-                    .font(TPType.caption())
-                    .foregroundStyle(TPColor.inkSecondary)
-            }
-        }
-        .tint(TPColor.damage)
-        .accessibilityIdentifier("capture.damageFlag")
-    }
-
-    private func findingRow(_ finding: Finding, index: Int) -> some View {
-        HStack(alignment: .top, spacing: 12) {
-            Text(String(format: "%02d", index + 1))
-                .font(TPType.mono())
-                .foregroundStyle(TPColor.inkTertiary)
-            VStack(alignment: .leading, spacing: 4) {
-                HStack(spacing: 8) {
-                    StatusChip(text: finding.condition.rawValue,
-                               color: TPColor.tint(for: finding.condition),
-                               background: TPColor.soft(for: finding.condition))
-                    if finding.isDamageFlagged {
-                        StatusChip(text: "damage", color: TPColor.damage, background: TPColor.damageSoft)
-                    }
-                }
-                Text(finding.note.isEmpty ? "No note" : finding.note)
-                    .font(TPType.small())
-                    .foregroundStyle(finding.note.isEmpty ? TPColor.inkTertiary : TPColor.inkSecondary)
-            }
             Spacer()
-            Button {
-                model.deleteFinding(finding)
-            } label: {
-                Image(systemName: "trash")
-                    .font(.system(.subheadline))
-                    .foregroundStyle(TPColor.inkTertiary)
+            VStack(spacing: 2) {
+                Text(room.name).font(.title3.weight(.semibold))
+                Text("Photo \(count + 1) of \(InspectionService.photoLimit)")
+                    .font(.footnote)
+                    .monospacedDigit()
+            }
+            .foregroundStyle(.white)
+            .multilineTextAlignment(.center)
+            .padding(.horizontal, 14)
+            .padding(.vertical, 6)
+            .floatingControl(in: Capsule())
+            Spacer()
+
+            PhotosPicker(selection: $libraryItem, matching: .images) {
+                Image(systemName: "photo.on.rectangle")
+                    .font(.body.weight(.semibold))
                     .frame(width: 44, height: 44)
             }
-            .buttonStyle(.plain)
-            .accessibilityIdentifier("finding.delete.\(index + 1)")
+            .floatingControl(in: Circle())
+            .accessibilityLabel("Library")
+            .accessibilityIdentifier("capture.library")
         }
-        .padding(.vertical, 8)
+        .foregroundStyle(.white)
+        .padding(.top, 8)
     }
 
-    private func bottomBar(_ inspection: Inspection, room: Room, count: Int) -> some View {
-        BottomBar {
+    private func recordedStrip(_ findings: [Finding]) -> some View {
+        ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 8) {
-                PhotosPicker(selection: $libraryItem, matching: .images) {
-                    Label("Library", systemImage: "photo.on.rectangle")
-                        .font(TPType.bodyStrong())
-                        .foregroundStyle(TPColor.ink)
-                        .frame(minWidth: 112, minHeight: 52)
-                        .overlay(Rectangle().stroke(TPColor.ink, lineWidth: 1))
+                ForEach(Array(findings.enumerated()), id: \.element.id) { index, finding in
+                    FindingThumbnail(finding: finding)
+                        .frame(width: 72)
+                        .overlay(alignment: .topLeading) {
+                            Button {
+                                model.deleteFinding(finding)
+                            } label: {
+                                Image(systemName: "trash.circle.fill")
+                                    .font(.title2)
+                                    .symbolRenderingMode(.palette)
+                                    .foregroundStyle(.white, TPColor.damage)
+                                    .frame(width: 44, height: 44, alignment: .topLeading)
+                            }
+                            .accessibilityLabel("Delete photo \(index + 1)")
+                            .accessibilityIdentifier("finding.delete.\(index + 1)")
+                        }
                 }
-                .accessibilityIdentifier("capture.library")
+            }
+            .padding(8)
+        }
+        .floatingControl(in: RoundedRectangle(cornerRadius: 22, style: .continuous))
+    }
 
+    private func panel(_ inspection: Inspection, room: Room, findings: [Finding]) -> some View {
+        VStack(spacing: 12) {
+            conditionControl
+            TextField("What the photo shows", text: $note, axis: .vertical)
+                .lineLimit(1...3)
+                .padding(.horizontal, 12)
+                .padding(.vertical, 10)
+                .background(Color.white.opacity(0.12), in: RoundedRectangle(cornerRadius: 10, style: .continuous))
+                .accessibilityIdentifier("capture.note")
+            Toggle("Flag as damage", isOn: $flagged)
+                .tint(TPColor.tint)
+                .accessibilityHint("Damage needs a note before the report can be sealed.")
+                .accessibilityIdentifier("capture.damageFlag")
+            if let errorText {
+                Text(errorText)
+                    .font(.footnote)
+                    .foregroundStyle(TPColor.damage)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .accessibilityIdentifier("capture.error")
+            }
+            HStack {
+                lastThumbnail(findings.last)
+                Spacer()
                 Button {
                     capturePhoto(inspection, room: room)
                 } label: {
-                    Label("Take photo", systemImage: "camera")
+                    Circle()
+                        .fill(.white)
+                        .padding(6)
+                        .overlay(Circle().stroke(.white, lineWidth: 4))
+                        .frame(width: 72, height: 72)
                 }
-                .buttonStyle(TPPrimaryButtonStyle())
-                .disabled(isSaving || count >= InspectionService.photoLimit)
+                .disabled(isSaving || findings.count >= InspectionService.photoLimit)
+                .accessibilityLabel("Take photo")
                 .accessibilityIdentifier("capture.shutter")
+                Spacer()
+                Button("Done") {
+                    if isSheet { dismiss() } else { router.pop() }
+                }
+                .buttonStyle(.bordered)
+                .buttonBorderShape(.capsule)
+                .controlSize(.large)
+                .frame(minWidth: 72)
             }
         }
+        .padding(16)
+        .floatingControl(in: RoundedRectangle(cornerRadius: 22, style: .continuous))
+    }
+
+    /// Segmented look, but real buttons so each condition keeps its own identifier.
+    private var conditionControl: some View {
+        HStack(spacing: 2) {
+            ForEach(Condition.allCases, id: \.self) { candidate in
+                let selected = condition == candidate
+                Button {
+                    condition = candidate
+                } label: {
+                    Label(candidate.title, systemImage: candidate.symbol)
+                        .font(.subheadline.weight(selected ? .semibold : .regular))
+                        .labelStyle(.titleAndIcon)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.8)
+                        .frame(maxWidth: .infinity, minHeight: 36)
+                        .foregroundStyle(selected ? Color.black : Color.white)
+                        .background(selected ? Color.white : .clear, in: Capsule())
+                        .contentShape(Capsule())
+                }
+                .buttonStyle(.plain)
+                .accessibilityIdentifier("capture.condition.\(candidate.rawValue)")
+                .accessibilityAddTraits(selected ? .isSelected : [])
+            }
+        }
+        .padding(2)
+        .background(Color.white.opacity(0.12), in: Capsule())
+    }
+
+    @ViewBuilder private func lastThumbnail(_ finding: Finding?) -> some View {
+        let shape = RoundedRectangle(cornerRadius: 8, style: .continuous)
+        Group {
+            if let finding, let image = UIImage(data: finding.photoData)?.preparingThumbnail(of: CGSize(width: 132, height: 132)) {
+                Image(uiImage: image).resizable().scaledToFill()
+            } else {
+                Color.white.opacity(0.12)
+            }
+        }
+        .frame(width: 44, height: 44)
+        .clipShape(shape)
+        .overlay(shape.stroke(.white.opacity(0.4), lineWidth: 1))
+        .frame(minWidth: 72, alignment: .leading)
+        .accessibilityHidden(true)
     }
 
     private func capturePhoto(_ inspection: Inspection, room: Room) {

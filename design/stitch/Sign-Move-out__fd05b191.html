@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>Sign</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        colors: {
+          "primary": "#1F3A64",
+          "background-light": "#F2F2F7",
+          "background-dark": "#14181e",
+        },
+        fontFamily: {
+          "display": ["-apple-system", "BlinkMacSystemFont", "SF Pro Text", "SF Pro Display", "sans-serif"]
+        },
+        borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+      },
+    },
+  }
+</script>
+<style>
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-font-smoothing: antialiased;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    background-color: #F2F2F7;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", sans-serif;
+    color: #000000;
+    width: 100%;
+    max-width: 390px;
+    min-height: 844px;
+    margin: 0 auto;
+    position: relative;
+    overflow-x: hidden;
+    padding-bottom: 120px;
+  }
+
+  /* Safe Area / Status Bar */
+  .status-bar {
+    position: sticky;
+    top: 0;
+    width: 100%;
+    height: 47px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 24px;
+    z-index: 100;
+    background: transparent;
+  }
+
+  .status-time {
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: -0.3px;
+    color: #000000;
+  }
+
+  .dynamic-island {
+    position: absolute;
+    top: 11px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 125px;
+    height: 35px;
+    background-color: #000000;
+    border-radius: 20px;
+  }
+
+  .status-icons {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .status-icons svg {
+    display: block;
+    fill: #000000;
+  }
+
+  /* Translucent Liquid Glass Navigation Bar */
+  .nav-bar {
+    position: sticky;
+    top: 47px;
+    width: 100%;
+    height: 44px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 8px;
+    z-index: 90;
+    background: rgba(242, 242, 247, 0.7);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+
+  .nav-back-button {
+    background: none;
+    border: none;
+    height: 44px;
+    min-width: 44px;
+    padding: 0 8px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: #1F3A64;
+    font-size: 17px;
+    font-weight: 400;
+    letter-spacing: -0.41px;
+    cursor: pointer;
+  }
+
+  .nav-title {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 17px;
+    font-weight: 600;
+    letter-spacing: -0.41px;
+    color: #000000;
+    white-space: nowrap;
+    pointer-events: none;
+  }
+
+  /* Main Scroll Content */
+  .content {
+    padding: 16px 16px 24px 16px;
+  }
+
+  /* Section Header */
+  .section-header {
+    font-size: 13px;
+    font-weight: 400;
+    color: #6C6C70;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-left: 16px;
+    margin-bottom: 8px;
+  }
+
+  /* Section Header Row with Action */
+  .section-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 16px;
+    margin-bottom: 8px;
+  }
+
+  .section-header-title {
+    font-size: 13px;
+    font-weight: 400;
+    color: #6C6C70;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .text-button {
+    background: none;
+    border: none;
+    color: #1F3A64;
+    font-size: 15px;
+    font-weight: 400;
+    letter-spacing: -0.24px;
+    cursor: pointer;
+    min-height: 44px;
+    min-width: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 0;
+  }
+
+  /* Inset Grouped Section */
+  .inset-group {
+    background: #FFFFFF;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  /* Signature Pad */
+  .signature-pad {
+    height: 160px;
+    background: #FFFFFF;
+    border: 1px solid #C6C6C8;
+    border-radius: 12px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .signature-baseline {
+    position: absolute;
+    bottom: 24px;
+    left: 16px;
+    right: 16px;
+    height: 1px;
+    background-color: #E5E5EA;
+  }
+
+  .signature-placeholder {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    color: #8E8E93;
+    pointer-events: none;
+  }
+
+  /* Toggle Switch */
+  .toggle-track {
+    width: 51px;
+    height: 31px;
+    background-color: #E5E5EA;
+    border-radius: 9999px;
+    padding: 2px;
+    position: relative;
+    flex-shrink: 0;
+  }
+
+  .toggle-knob {
+    width: 27px;
+    height: 27px;
+    background-color: #FFFFFF;
+    border-radius: 50%;
+  }
+
+  /* Bottom Pinned Bar */
+  .pinned-bottom-bar {
+    position: fixed;
+    bottom: 34px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 390px;
+    padding: 12px 16px;
+    background: rgba(242, 242, 247, 0.7);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    z-index: 90;
+  }
+
+  .action-capsule-button {
+    height: 50px;
+    background-color: #E5E5EA;
+    color: #8E8E93;
+    font-size: 17px;
+    font-weight: 600;
+    letter-spacing: -0.41px;
+    border-radius: 9999px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border: none;
+    cursor: not-allowed;
+  }
+
+  /* Home Indicator */
+  .home-indicator-container {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 390px;
+    height: 34px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    padding-bottom: 8px;
+    pointer-events: none;
+    z-index: 100;
+    background: rgba(242, 242, 247, 0.7);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+
+  .home-indicator {
+    width: 139px;
+    height: 5px;
+    background-color: #000000;
+    border-radius: 2.5px;
+  }
+</style>
+</head>
+<body>
+<!-- Status Bar with Dynamic Island -->
+<div class="status-bar">
+<div class="status-time">9:41</div>
+<div class="dynamic-island"></div>
+<div class="status-icons">
+<!-- Cellular Signal -->
+<svg height="12" viewbox="0 0 18 12" width="18">
+<path d="M1 9.5a1 1 0 0 1 1-1h1a1 1 0 0 1 1 1v1.5a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V9.5zm5-3a1 1 0 0 1 1-1h1a1 1 0 0 1 1 1V11a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V6.5zm5-3a1 1 0 0 1 1-1h1a1 1 0 0 1 1 1V11a1 1 0 0 1-1 1h-1a1 1 0 0 1-1-1V3.5zm5-3a1 1 0 0 1 1-1h1a1 1 0 0 1 1 1V11a1 1 0 0 1-1 1h-1a1 1 0 0 1-1-1V.5z"></path>
+</svg>
+<!-- Wi-Fi -->
+<svg height="12" viewbox="0 0 16 12" width="16">
+<path d="M8 3.5c2.4 0 4.6.9 6.2 2.5.4.4.4 1 0 1.4-.4.4-1 .4-1.4 0C11.5 6.1 9.8 5.4 8 5.4s-3.5.7-4.8 2c-.4.4-1 .4-1.4 0-.4-.4-.4-1 0-1.4C3.4 4.4 5.6 3.5 8 3.5zm0-3.5C11.6 0 14.8 1.4 17.2 3.8c.4.4.4 1 0 1.4-.4.4-1 .4-1.4 0C13.6 2.9 10.9 1.7 8 1.7 5.1 1.7 2.4 2.9.2 5.2c-.4.4-1 .4-1.4 0-.4-.4-.4-1 0-1.4C1.2 1.4 4.4 0 8 0zm0 7.8c1.3 0 2.5.5 3.4 1.4.4.4.4 1 0 1.4-.4.4-1 .4-1.4 0-.5-.5-1.2-.8-2-.8s-1.5.3-2 .8c-.4.4-1 .4-1.4 0-.4-.4-.4-1 0-1.4.9-.9 2.1-1.4 3.4-1.4zm0 3.9a1.1 1.1 0 1 1 0-2.2 1.1 1.1 0 0 1 0 2.2z"></path>
+</svg>
+<!-- Battery -->
+<svg height="12" viewbox="0 0 25 12" width="25">
+<rect fill="none" height="10" rx="3" stroke="#000000" stroke-width="1" width="20" x="1" y="1"></rect>
+<rect fill="#000000" height="7" rx="1.5" width="13" x="2.5" y="2.5"></rect>
+<path d="M22.5 4.5v3a1.5 1.5 0 0 0 1.5-1.5v0a1.5 1.5 0 0 0-1.5-1.5z" fill="#000000"></path>
+</svg>
+</div>
+</div>
+<!-- Translucent Liquid Glass Navigation Bar -->
+<nav class="nav-bar">
+<button aria-label="Review" class="nav-back-button">
+<svg fill="none" height="20" stroke="#1F3A64" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" viewbox="0 0 12 20" width="12">
+<path d="M10 2L2 10L10 18"></path>
+</svg>
+<span>Review</span>
+</button>
+<div class="nav-title">Sign</div>
+</nav>
+<!-- Content -->
+<main class="content">
+<!-- 1. What You Are Signing -->
+<div class="section-header">WHAT YOU ARE SIGNING</div>
+<div class="inset-group" style="padding: 16px; margin-bottom: 8px;">
+<p style="font-size: 17px; font-weight: 400; color: #000000; line-height: 22px; letter-spacing: -0.41px;">
+      We walked through Maple Court, Unit 2B together on Nov 19, 2026 and reviewed 19 photos across 6 rooms. This report records the condition we observed.
+    </p>
+</div>
+<div style="font-size: 13px; font-weight: 400; color: #6C6C70; padding-left: 16px; margin-bottom: 24px; letter-spacing: -0.08px;">
+    This is a record of condition, not legal advice.
+  </div>
+<!-- 2. Tenant Signature Section -->
+<div class="section-header-row">
+<span class="section-header-title">TENANT · JORDAN LEE</span>
+<button class="text-button">Clear</button>
+</div>
+<div class="signature-pad" style="margin-bottom: 24px;">
+<div class="signature-baseline"></div>
+<div class="signature-placeholder">
+<!-- SF Symbol 'signature' / pen icon -->
+<svg fill="none" height="20" stroke="#8E8E93" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="20">
+<path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+<path d="M3 20h18"></path>
+</svg>
+<span style="font-size: 15px; font-weight: 400; letter-spacing: -0.24px;">Sign here</span>
+</div>
+</div>
+<!-- 3. Landlord Signature Section -->
+<div class="section-header-row">
+<span class="section-header-title">LANDLORD · ALEX MORGAN</span>
+<button class="text-button">Clear</button>
+</div>
+<div class="signature-pad" style="margin-bottom: 6px;">
+<div class="signature-baseline"></div>
+<!-- Realistic Dark Navy Signature Stroke Sitting on Baseline -->
+<svg style="position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none;" viewbox="0 0 358 160">
+<path d="M 46 112 C 58 76, 72 48, 86 64 C 95 75, 88 126, 78 135 C 70 142, 60 128, 84 122 C 108 116, 122 136, 134 135 C 146 134, 154 116, 160 125 C 168 137, 186 110, 196 135 C 204 132, 218 120, 230 134 C 242 128, 252 112, 260 124 C 274 138, 288 130, 312 135" fill="none" stroke="#1F3A64" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path>
+<path d="M 126 125 C 144 112, 172 106, 210 114" fill="none" stroke="#1F3A64" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</div>
+<div style="font-size: 13px; font-weight: 400; color: #6C6C70; padding-left: 16px; margin-bottom: 24px; letter-spacing: -0.08px;">
+    Signed 4:10 PM
+  </div>
+<!-- 4. Review Confirmation Inset Section -->
+<div class="inset-group" style="padding: 16px; min-height: 44px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px;">
+<span style="font-size: 17px; font-weight: 400; color: #000000; letter-spacing: -0.41px; padding-right: 12px;">
+      Both of us reviewed every room
+    </span>
+<!-- iOS toggle switch in OFF state -->
+<div aria-checked="false" class="toggle-track" role="switch">
+<div class="toggle-knob"></div>
+</div>
+</div>
+</main>
+<!-- Translucent Pinned Bottom Bar -->
+<div class="pinned-bottom-bar">
+<button class="action-capsule-button" disabled="">
+<!-- SF Symbol 'checkmark.seal' -->
+<svg fill="none" height="20" stroke="#8E8E93" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="20">
+<path d="M12 2l2.4 2.4 3.4-.6 1.2 3.2 3.1 1.5-.7 3.3 2.1 2.7-2.1 2.7.7 3.3-3.1 1.5-1.2 3.2-3.4-.6L12 22l-2.4-2.4-3.4.6-1.2-3.2-3.1-1.5.7-3.3L.5 9.5 2.6 6.8l-.7-3.3 3.1-1.5 1.2-3.2 3.4.6L12 2z"></path>
+<path d="M9 12l2 2 4-4"></path>
+</svg>
+<span>Seal Report</span>
+</button>
+</div>
+<!-- Home Indicator -->
+<div class="home-indicator-container">
+<div class="home-indicator"></div>
+</div>
+</body></html>

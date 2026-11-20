@@ -41,6 +41,12 @@ final class AccessibilityAuditTests: XCTestCase {
 
     @MainActor
     private func audit(_ app: XCUIApplication) throws {
-        try app.performAccessibilityAudit(for: [.dynamicType, .hitRegion, .sufficientElementDescription])
+        let bar = app.navigationBars.firstMatch
+        let navigationBar = bar.exists ? bar.frame : .zero
+        try app.performAccessibilityAudit(for: [.dynamicType, .hitRegion, .sufficientElementDescription]) { issue in
+            // System bar buttons stay fixed and show the Large Content Viewer instead of growing.
+            guard issue.auditType == .dynamicType, let element = issue.element else { return false }
+            return navigationBar.contains(element.frame)
+        }
     }
 }

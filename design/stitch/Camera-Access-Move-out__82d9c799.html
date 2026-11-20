@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=390, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>Camera Access Permission Modal</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- BEGIN: Custom iOS Base Styles -->
+<style data-purpose="ios-typography-base">
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", sans-serif;
+      -webkit-font-smoothing: -webkit-antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      user-select: none;
+      -webkit-user-select: none;
+      background-color: #000000;
+    }
+  </style>
+<style data-purpose="sheet-geometry">
+    .ios-viewport {
+      width: 390px;
+      height: 844px;
+      overflow: hidden;
+      position: relative;
+    }
+    .sheet-radius {
+      border-top-left-radius: 28px;
+      border-top-right-radius: 28px;
+    }
+    .custom-navy {
+      color: #1F3A64;
+    }
+    .bg-custom-navy {
+      background-color: #1F3A64;
+    }
+    .custom-gray {
+      color: #6C6C70;
+    }
+    .grabber-color {
+      background-color: rgba(60, 60, 67, 0.3);
+    }
+  </style>
+<!-- END: Custom iOS Base Styles -->
+</head>
+<body class="bg-black flex justify-center items-center min-h-screen p-0 m-0">
+<!-- BEGIN: DeviceViewport -->
+<div class="ios-viewport bg-[#F2F2F7] relative flex flex-col justify-between" data-purpose="iphone-frame">
+<!-- BEGIN: BackgroundScreen -->
+<!-- Dimmed underlying screen based on {{DATA:SCREEN:SCREEN_16}} -->
+<div class="absolute inset-0 flex flex-col pointer-events-none select-none z-0" data-purpose="underlying-room-list">
+<!-- iOS Status Bar & Dynamic Island -->
+<header class="w-full pt-3 px-7 flex justify-between items-center text-black font-semibold text-[15px] z-10" data-purpose="status-bar">
+<span>9:41</span>
+<!-- Dynamic Island -->
+<div class="w-[124px] h-[35px] bg-black rounded-full mx-auto absolute left-1/2 -translate-x-1/2 top-[11px]" data-purpose="dynamic-island"></div>
+<!-- Status Icons -->
+<div class="flex items-center space-x-1.5">
+<!-- Cellular -->
+<svg class="w-4 h-3.5 fill-black" viewbox="0 0 17 11">
+<rect height="3.5" rx="0.8" width="2.5" x="0" y="7.5"></rect>
+<rect height="6" rx="0.8" width="2.5" x="4.5" y="5"></rect>
+<rect height="8.5" rx="0.8" width="2.5" x="9" y="2.5"></rect>
+<rect height="11" rx="0.8" width="2.5" x="13.5" y="0"></rect>
+</svg>
+<!-- Wi-Fi -->
+<svg class="w-4 h-3.5 fill-black" viewbox="0 0 16 12">
+<path d="M8 2.5c2.6 0 5 1.1 6.7 2.8l1.3-1.4C13.8 1.8 11.1 0.5 8 0.5 4.9 0.5 2.2 1.8.0 3.9l1.3 1.4C3 2.6 5.4 2.5 8 2.5zm0 4c1.6 0 3.1.7 4.1 1.8l1.3-1.4C12 5.5 10.1 4.5 8 4.5s-4 1-5.4 2.4l1.3 1.4C4.9 7.2 6.4 6.5 8 6.5zm0 4a1.5 1.5 0 100 3 1.5 1.5 0 000-3z"></path>
+</svg>
+<!-- Battery -->
+<div class="w-6 h-3 border border-black rounded-[4px] p-0.5 flex items-center relative">
+<div class="w-full h-full bg-black rounded-[1.5px]"></div>
+<div class="w-0.5 h-1.5 bg-black absolute -right-1 rounded-r-sm top-[3px]"></div>
+</div>
+</div>
+</header>
+<!-- Sub-Navigation Header -->
+<div class="flex justify-between items-center px-4 mt-3" data-purpose="nav-header">
+<div class="flex items-center text-[#007AFF] text-[17px]">
+<svg class="w-5 h-5 -mr-0.5" fill="none" stroke="currentColor" stroke-width="2.5" viewbox="0 0 24 24">
+<path d="M15 19l-7-7 7-7" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span>Maple Court</span>
+</div>
+<div class="text-[17px] font-semibold text-black">Move-out</div>
+<div class="text-[#007AFF] text-2xl font-normal leading-none pr-1">+</div>
+</div>
+<!-- Progress Card -->
+<div class="mx-4 mt-3 p-4 bg-white rounded-2xl shadow-sm" data-purpose="progress-card">
+<div class="flex justify-between items-baseline mb-2">
+<span class="text-[17px] font-bold text-black">4 of 6 rooms</span>
+<span class="text-[15px] text-[#8E8E93]">14 photos</span>
+</div>
+<!-- Progress Bar -->
+<div class="w-full h-1 bg-[#E5E5EA] rounded-full overflow-hidden">
+<div class="w-2/3 h-full bg-[#1F3A64] rounded-full"></div>
+</div>
+</div>
+<!-- Rooms List Section Header -->
+<div class="px-5 mt-5 mb-1.5 text-[13px] font-medium text-[#8E8E93] tracking-wider uppercase">Rooms</div>
+<!-- Rooms Grouped List -->
+<div class="mx-4 bg-white rounded-2xl overflow-hidden divide-y divide-[#E5E5EA]" data-purpose="room-items">
+<!-- Row: Kitchen -->
+<div class="px-4 py-3 flex items-center justify-between">
+<div class="flex items-center space-x-3">
+<svg class="w-6 h-6 text-[#34C759] fill-current" viewbox="0 0 20 20">
+<path clip-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" fill-rule="evenodd"></path>
+</svg>
+<span class="text-[17px] text-black">Kitchen</span>
+</div>
+<div class="flex items-center space-x-1.5 text-[#8E8E93]">
+<span class="text-[15px]">5 photos</span>
+<svg class="w-3.5 h-3.5 stroke-current stroke-2 fill-none" viewbox="0 0 24 24"><path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+</div>
+</div>
+<!-- Row: Living room -->
+<div class="px-4 py-3 flex items-center justify-between">
+<div class="flex items-center space-x-3">
+<svg class="w-6 h-6 text-[#34C759] fill-current" viewbox="0 0 20 20">
+<path clip-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" fill-rule="evenodd"></path>
+</svg>
+<span class="text-[17px] text-black">Living room</span>
+</div>
+<div class="flex items-center space-x-1.5 text-[#8E8E93]">
+<span class="text-[15px]">4 photos</span>
+<svg class="w-3.5 h-3.5 stroke-current stroke-2 fill-none" viewbox="0 0 24 24"><path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+</div>
+</div>
+<!-- Row: Bedroom -->
+<div class="px-4 py-3 flex items-center justify-between">
+<div class="flex items-center space-x-3">
+<svg class="w-6 h-6 text-[#34C759] fill-current" viewbox="0 0 20 20">
+<path clip-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" fill-rule="evenodd"></path>
+</svg>
+<span class="text-[17px] text-black">Bedroom</span>
+</div>
+<div class="flex items-center space-x-1.5 text-[#8E8E93]">
+<span class="text-[15px]">3 photos</span>
+<svg class="w-3.5 h-3.5 stroke-current stroke-2 fill-none" viewbox="0 0 24 24"><path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+</div>
+</div>
+</div>
+</div>
+<!-- END: BackgroundScreen -->
+<!-- BEGIN: ModalBackdrop -->
+<!-- Presentation sheet dimming backdrop -->
+<div class="absolute inset-0 bg-black/40 z-20 pointer-events-auto" data-purpose="dimming-overlay"></div>
+<!-- END: ModalBackdrop -->
+<!-- BEGIN: CameraAccessModalSheet -->
+<!-- Native Medium-Detent Presentation Sheet -->
+<section aria-labelledby="modal-camera-title" aria-modal="true" class="absolute bottom-0 inset-x-0 bg-white sheet-radius z-30 flex flex-col justify-between" data-purpose="camera-access-modal" role="dialog" style="height: 460px;">
+<!-- Top Grabber and Upper Informational Content -->
+<div class="flex flex-col items-center px-6">
+<!-- iOS Sheet Grabber Bar -->
+<div class="w-[36px] h-[5px] grabber-color rounded-full mt-2" data-purpose="sheet-grabber"></div>
+<!-- SF Symbol: Camera -->
+<div class="mt-6 flex items-center justify-center" data-purpose="camera-icon">
+<svg class="w-11 h-11 custom-navy" fill="currentColor" viewbox="0 0 24 24">
+<path d="M4 7c-1.10457 0-2 .89543-2 2v10c0 1.1046.89543 2 2 2h16c1.1046 0 2-.8954 2-2V9c0-1.10457-.8954-2-2-2h-3.1716l-.8284-1.65685C15.6288 4.59765 14.8644 4 14.0298 4H9.97022c-.83457 0-1.59897.59765-1.97022 1.34315L7.17157 7H4zm8 11.5c-2.4853 0-4.5-2.0147-4.5-4.5s2.0147-4.5 4.5-4.5 4.5 2.0147 4.5 4.5-2.0147 4.5-4.5 4.5zm0-2c1.3807 0 2.5-1.1193 2.5-2.5s-1.1193-2.5-2.5-2.5-2.5 1.1193-2.5 2.5 1.1193 2.5 2.5 2.5z"></path>
+</svg>
+</div>
+<!-- Modal Title -->
+<h1 class="mt-4 text-[22px] font-bold text-black text-center tracking-tight" id="modal-camera-title" style="font-family: -apple-system, 'SF Pro Display', sans-serif;">
+          Photograph each room
+        </h1>
+<!-- Explanatory Body Copy -->
+<p class="mt-2 text-[17px] custom-gray text-center leading-[1.35] max-w-[342px]">
+          Turnproof uses the camera to take a photo of every item you inspect. Photos stay on this iPhone.
+        </p>
+</div>
+<!-- Action Buttons and Safe Area Indicator pinned at bottom -->
+<footer class="flex flex-col items-center px-6 pb-2" data-purpose="modal-actions">
+<!-- Primary Action Button -->
+<button class="w-full h-[50px] bg-custom-navy text-white text-[17px] font-semibold rounded-full flex items-center justify-center active:opacity-90 transition-opacity" data-purpose="continue-button" type="button">
+          Continue
+        </button>
+<!-- Secondary Action Button -->
+<button class="w-full min-h-[44px] mt-2 flex items-center justify-center text-[17px] font-normal custom-navy active:opacity-60 transition-opacity" data-purpose="not-now-button" type="button">
+          Not Now
+        </button>
+<!-- iOS Home Indicator -->
+<div class="w-[134px] h-[5px] bg-black rounded-full mt-2 mb-1" data-purpose="home-indicator"></div>
+</footer>
+</section>
+<!-- END: CameraAccessModalSheet -->
+</div>
+<!-- END: DeviceViewport -->
+</body></html>
