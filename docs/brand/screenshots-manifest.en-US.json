@@ -4,6 +4,6 @@
   {"screenshot": "raw/en-US/03-capture.png", "title": "Photo, condition, note", "subtitle": "Flag damage with a note that stays attached", "gradient": "graphite", "device": "iphone-17-pro", "filename": "03-capture.png"},
   {"screenshot": "raw/en-US/04-review.png", "title": "See what is missing", "subtitle": "Review before anyone signs", "gradient": "midight-blue", "device": "iphone-17-pro", "filename": "04-review.png"},
   {"screenshot": "raw/en-US/05-sign.png", "title": "Signed by both parties", "subtitle": "Tenant and landlord sign on the same phone", "gradient": "deep-space", "device": "iphone-17-pro", "filename": "05-sign.png"},
-  {"screenshot": "raw/en-US/06-export.png", "title": "Sealed into a PDF", "subtitle": "A SHA-256 digest you can hand over the same day", "gradient": "graphite", "device": "iphone-17-pro", "filename": "06-export.png"},
+  {"screenshot": "raw/en-US/06-export.png", "title": "Sealed into a PDF", "subtitle": "A verification code you can hand over the same day", "gradient": "graphite", "device": "iphone-17-pro", "filename": "06-export.png"},
   {"screenshot": "raw/en-US/07-verify.png", "title": "Verify any time", "subtitle": "Recomputed on your device, nothing uploaded", "gradient": "midight-blue", "device": "iphone-17-pro", "filename": "07-verify.png"}
 ]
