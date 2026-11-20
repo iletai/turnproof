@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>Properties — Empty State</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            ios: {
+              bg: '#F2F2F7',
+              navy: '#1B375C',
+              navyActive: '#152C4A',
+              subtext: '#687076',
+              border: '#E5E7EB',
+            }
+          },
+          fontFamily: {
+            sans: ['-apple-system', 'BlinkMacSystemFont', '"SF Pro Display"', '"SF Pro Text"', 'system-ui', 'sans-serif'],
+          }
+        }
+      }
+    };
+  </script>
+<style data-purpose="custom-utilities">
+    /* iOS native touch feedback & smooth styling */
+    * {
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+  </style>
+</head>
+<body class="bg-[#F2F2F7] flex justify-center items-center min-h-screen p-0 sm:p-4 text-black font-sans antialiased">
+<!-- BEGIN: PhoneFrame -->
+<main class="relative w-full max-w-[393px] h-[852px] bg-[#F2F2F7] sm:rounded-[54px] sm:shadow-[0_25px_60px_-15px_rgba(0,0,0,0.3)] flex flex-col overflow-hidden sm:ring-1 sm:ring-black/10 select-none">
+<!-- BEGIN: iOSStatusBar -->
+<header class="relative w-full pt-3 px-8 flex justify-between items-center z-50 shrink-0">
+<!-- Time Display -->
+<span class="text-[16px] font-semibold tracking-tight text-black pt-1">9:41</span>
+<!-- Dynamic Island cutout placeholder -->
+<div aria-hidden="true" class="absolute left-1/2 -translate-x-1/2 top-2.5 w-[124px] h-[34px] bg-black rounded-full pointer-events-none"></div>
+<!-- System Status Indicators: Cellular, Wi-Fi, Battery -->
+<div class="flex items-center space-x-1.5 pt-1 text-black">
+<!-- Cellular signal icon -->
+<svg class="w-4 h-3 fill-current" viewbox="0 0 17 12">
+<rect height="3.5" rx="0.75" width="2.5" x="0" y="8.5"></rect>
+<rect height="6" rx="0.75" width="2.5" x="4.5" y="6"></rect>
+<rect height="8.5" rx="0.75" width="2.5" x="9" y="3.5"></rect>
+<rect height="11.5" rx="0.75" width="2.5" x="13.5" y="0.5"></rect>
+</svg>
+<!-- Wi-Fi icon -->
+<svg class="w-4 h-3.5 fill-current" viewbox="0 0 16 12">
+<path clip-rule="evenodd" d="M8 2.2C5.07 2.2 2.45 3.39 0.55 5.33C0.2 5.68 0.2 6.25 0.55 6.6C0.9 6.95 1.47 6.95 1.82 6.6C3.44 4.95 5.6 3.96 8 3.96C10.4 3.96 12.56 4.95 14.18 6.6C14.53 6.95 15.1 6.95 15.45 6.6C15.8 6.25 15.8 5.68 15.45 5.33C13.55 3.39 10.93 2.2 8 2.2ZM3.37 8.16C4.6 6.95 6.22 6.2 8 6.2C9.78 6.2 11.4 6.95 12.63 8.16C12.98 8.51 12.98 9.08 12.63 9.43C12.28 9.78 11.71 9.78 11.36 9.43C10.44 8.52 9.27 8 8 8C6.73 8 5.56 8.52 4.64 9.43C4.29 9.78 3.72 9.78 3.37 9.43C3.02 9.08 3.02 8.51 3.37 8.16ZM8 10.2C7.34 10.2 6.8 10.74 6.8 11.4C6.8 12.06 7.34 12.6 8 12.6C8.66 12.6 9.2 12.06 9.2 11.4C9.2 10.74 8.66 10.2 8 10.2Z" fill-rule="evenodd"></path>
+</svg>
+<!-- Battery level icon -->
+<div class="relative flex items-center">
+<div class="w-[23px] h-[11.5px] border-[1.25px] border-black rounded-[3.5px] p-[1.5px] flex items-center">
+<div class="w-full h-full bg-black rounded-[1.5px]"></div>
+</div>
+<div class="w-[1.25px] h-[4px] bg-black rounded-r-[0.75px] -ml-[0.5px]"></div>
+</div>
+</div>
+</header>
+<!-- END: iOSStatusBar -->
+<!-- BEGIN: TopNavigation -->
+<nav aria-label="Quick Actions" class="w-full px-5 pt-3 pb-1 flex justify-end items-center gap-5 shrink-0">
+<!-- Settings action button -->
+<button aria-label="Settings" class="text-black hover:text-black/70 active:scale-95 transition" type="button">
+<svg class="w-[21px] h-[21px] fill-current" viewbox="0 0 24 24">
+<path d="M12 15.5A3.5 3.5 0 0 1 8.5 12A3.5 3.5 0 0 1 12 8.5a3.5 3.5 0 0 1 3.5 3.5a3.5 3.5 0 0 1-3.5 3.5m7.43-2.53c.04-.32.07-.64.07-.97s-.03-.66-.07-1l2.11-1.63c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.31-.61-.22l-2.49 1c-.52-.39-1.06-.73-1.69-.98l-.37-2.65A.506.506 0 0 0 14 2h-4c-.25 0-.46.18-.5.42l-.37 2.65c-.63.25-1.17.59-1.69.98l-2.49-1c-.22-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64L4.57 11c-.04.34-.07.67-.07 1s.03.65.07.97l-2.11 1.66c-.19.15-.25.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1.01c.52.4 1.06.74 1.69.99l.37 2.65c.04.24.25.42.5.42h4c.25 0 .46-.18.5-.42l.37-2.65c.63-.26 1.17-.59 1.69-.99l2.49 1.01c.22.08.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.66Z"></path>
+</svg>
+</button>
+<!-- Add Property action button -->
+<button aria-label="Add Property" class="text-black hover:text-black/70 active:scale-95 transition" type="button">
+<svg class="w-[21px] h-[21px]" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewbox="0 0 24 24">
+<line x1="12" x2="12" y1="5" y2="19"></line>
+<line x1="5" x2="19" y1="12" y2="12"></line>
+</svg>
+</button>
+</nav>
+<!-- END: TopNavigation -->
+<!-- BEGIN: PageTitleSection -->
+<header class="px-5 pt-1 shrink-0">
+<h1 class="text-[34px] font-bold tracking-tight text-black leading-tight">Properties</h1>
+</header>
+<!-- END: PageTitleSection -->
+<!-- BEGIN: EmptyStateBody -->
+<section aria-label="Empty State" class="flex-1 flex flex-col items-center justify-center px-6 pb-20 select-none text-center">
+<!-- Outlined Building Icon -->
+<div aria-hidden="true" class="mb-5 text-[#8E8E93]">
+<svg class="w-12 h-12 stroke-[1.4] stroke-current fill-none" viewbox="0 0 48 48">
+<!-- Main Outer Building Frame -->
+<path d="M14 42V14a3 3 0 0 1 3-3h14a3 3 0 0 1 3 3v28" stroke-linecap="round" stroke-linejoin="round"></path>
+<!-- Baseline / Ground -->
+<path d="M9 42h30" stroke-linecap="round"></path>
+<!-- Outer Side Wall Ledges -->
+<path d="M14 20H10a2 2 0 0 0-2 2v20M34 20h4a2 2 0 0 1 2 2v20" stroke-linecap="round" stroke-linejoin="round"></path>
+<!-- Architectural Windows / Details -->
+<rect height="3" rx="0.5" stroke-linecap="round" width="8" x="20" y="16"></rect>
+<rect height="3" rx="0.5" stroke-linecap="round" width="8" x="20" y="23"></rect>
+<rect height="3" rx="0.5" stroke-linecap="round" width="8" x="20" y="30"></rect>
+<!-- Entrance Doorway -->
+<path d="M21 42v-5h6v5" stroke-linecap="round"></path>
+</svg>
+</div>
+<!-- Main Headline -->
+<h2 class="text-[20px] font-bold text-black tracking-tight mb-1.5">No properties yet</h2>
+<!-- Description Subtext -->
+<p class="text-[14.5px] leading-[20px] text-[#6E7179] max-w-[245px] mb-6">
+        Add a rental unit to start its first condition report.
+      </p>
+<!-- CTA Button -->
+<button class="bg-[#1B375C] hover:bg-[#152C4A] active:scale-[0.98] transition-all text-white font-medium text-[15px] px-6 py-2.5 rounded-full shadow-sm" type="button">
+        Add Property
+      </button>
+</section>
+<!-- END: EmptyStateBody -->
+<!-- BEGIN: iOSHomeIndicator -->
+<footer aria-hidden="true" class="w-full pb-3 flex justify-center items-end shrink-0">
+<div class="w-[136px] h-[5px] bg-black rounded-full"></div>
+</footer>
+<!-- END: iOSHomeIndicator -->
+</main>
+<!-- END: PhoneFrame -->
+</body></html>

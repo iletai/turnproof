@@ -1,34 +1,74 @@
 import SwiftUI
 
+/// Ledger Ink roles (docs/brand/DESIGN.md §2). System colors first; asset colors only where the system has no accessible role.
 enum TPColor {
-    static let paper = Color(hex: 0xF6F2EA)
-    static let paperRaised = Color(hex: 0xFFFDF8)
-    static let ink = Color(hex: 0x10233B)
-    static let inkSecondary = Color(hex: 0x4A5A6A)
-    static let inkTertiary = Color(hex: 0x5F6E7C)
-    static let hairline = Color(hex: 0xDED7C9)
-    static let brass = Color(hex: 0xB08A4F)
-    static let brassSoft = Color(hex: 0xEFE3CF)
-    static let good = Color(hex: 0x1F6F4A)
-    static let goodSoft = Color(hex: 0xE4EFE8)
-    static let damage = Color(hex: 0xB42318)
-    static let damageSoft = Color(hex: 0xF7E7E4)
-    static let warning = Color(hex: 0x9C4A06)
-    static let warningSoft = Color(hex: 0xFBEFDD)
+    static let background = Color(uiColor: .systemGroupedBackground)
+    static let surface = Color(uiColor: .secondarySystemGroupedBackground)
+    static let plainBackground = Color(uiColor: .systemBackground)
+    static let textPrimary = Color(uiColor: .label)
+    /// System `secondaryLabel` fails 4.5:1, so secondary text uses this asset color.
+    static let textSecondary = Color("TextSecondary")
+    static let separator = Color(uiColor: .separator)
+    static let tint = Color("AccentColor")
+    static let onTint = Color("OnTint")
+    static let good = Color("StatusGood")
+    static let fair = Color("StatusFair")
+    static let damage = Color(uiColor: .systemRed)
 
+    /// Glyph color only; status text stays in textPrimary/textSecondary.
     static func tint(for condition: Condition) -> Color {
         switch condition {
         case .good: good
-        case .fair: warning
+        case .fair: fair
         case .damaged: damage
         }
     }
 
-    static func soft(for condition: Condition) -> Color {
-        switch condition {
-        case .good: goodSoft
-        case .fair: warningSoft
-        case .damaged: damageSoft
+    // v1 aliases, removed once every screen is on the v2 roles.
+    static let paper = background
+    static let paperRaised = surface
+    static let ink = textPrimary
+    static let inkSecondary = textSecondary
+    static let inkTertiary = textSecondary
+    static let hairline = separator
+    static let brass = tint
+    static let brassSoft = tint.opacity(0.12)
+    static let warning = fair
+    static let goodSoft = good.opacity(0.12)
+    static let damageSoft = damage.opacity(0.12)
+    static let warningSoft = fair.opacity(0.12)
+    static func soft(for condition: Condition) -> Color { tint(for: condition).opacity(0.12) }
+}
+
+extension Condition {
+    /// Shape carries the meaning so condition is never color alone.
+    var symbol: String {
+        switch self {
+        case .good: "checkmark.circle"
+        case .fair: "minus.circle"
+        case .damaged: "xmark.octagon"
+        }
+    }
+}
+
+extension View {
+    /// The one primary action of a screen: full-width capsule, Ink tint, glass on iOS 26+.
+    @ViewBuilder func primaryActionStyle() -> some View {
+        let base = frame(maxWidth: .infinity, minHeight: 34).fontWeight(.semibold)
+        if #available(iOS 26, *) {
+            base.buttonStyle(.glassProminent).controlSize(.large).buttonBorderShape(.capsule)
+        } else {
+            base.buttonStyle(.borderedProminent).controlSize(.large).buttonBorderShape(.capsule)
+        }
+    }
+
+    /// Pins the primary action at the bottom; content scrolls under the glass bar on iOS 26+.
+    @ViewBuilder func bottomActionBar<Bar: View>(@ViewBuilder _ bar: () -> Bar) -> some View {
+        let content = bar().padding(.horizontal, 16).padding(.vertical, 8)
+        if #available(iOS 26, *) {
+            safeAreaBar(edge: .bottom) { content }
+        } else {
+            safeAreaInset(edge: .bottom) { content.background(.bar) }
         }
     }
 }
@@ -151,18 +191,6 @@ struct ConditionChip: View {
 
 struct Hairline: View {
     var body: some View { Rectangle().fill(TPColor.hairline).frame(height: 1) }
-}
-
-extension Color {
-    init(hex: UInt32) {
-        self.init(
-            .sRGB,
-            red: Double((hex >> 16) & 0xFF) / 255,
-            green: Double((hex >> 8) & 0xFF) / 255,
-            blue: Double(hex & 0xFF) / 255,
-            opacity: 1
-        )
-    }
 }
 
 extension Color {

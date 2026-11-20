@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>Report</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        colors: {
+          "primary": "#1F3A64",
+          "background-light": "#F2F2F7",
+          "background-dark": "#14181e",
+        },
+        fontFamily: {
+          "display": ["-apple-system", "BlinkMacSystemFont", "SF Pro Text", "SF Pro Display", "sans-serif"],
+          "mono": ["ui-monospace", "SFMono-Regular", "Menlo", "monospace"]
+        },
+        borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+      },
+    },
+  }
+</script>
+<style>
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-font-smoothing: antialiased;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    background-color: #F2F2F7;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", sans-serif;
+    color: #000000;
+    width: 100%;
+    max-width: 390px;
+    min-height: 844px;
+    margin: 0 auto;
+    position: relative;
+    overflow-x: hidden;
+    padding-bottom: 120px;
+  }
+
+  /* Safe Area / Status Bar */
+  .status-bar {
+    position: sticky;
+    top: 0;
+    width: 100%;
+    height: 47px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 24px;
+    z-index: 100;
+    background: transparent;
+  }
+
+  .status-time {
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: -0.3px;
+    color: #000000;
+  }
+
+  .dynamic-island {
+    position: absolute;
+    top: 11px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 125px;
+    height: 35px;
+    background-color: #000000;
+    border-radius: 20px;
+  }
+
+  .status-icons {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .status-icons svg {
+    display: block;
+    fill: #000000;
+  }
+
+  /* Translucent Liquid Glass Navigation Bar */
+  .nav-bar {
+    position: sticky;
+    top: 47px;
+    width: 100%;
+    height: 44px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 0 16px;
+    z-index: 90;
+    background: rgba(242, 242, 247, 0.7);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+
+  .nav-title {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 17px;
+    font-weight: 600;
+    letter-spacing: -0.41px;
+    color: #000000;
+    white-space: nowrap;
+    pointer-events: none;
+  }
+
+  .nav-done-button {
+    background: none;
+    border: none;
+    height: 44px;
+    min-width: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    color: #1F3A64;
+    font-size: 17px;
+    font-weight: 600;
+    letter-spacing: -0.41px;
+    cursor: pointer;
+    padding: 0;
+  }
+
+  /* Main Scroll Content */
+  .content {
+    padding: 20px 16px 24px 16px;
+  }
+
+  /* Centered Header */
+  .header-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .header-title {
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 28px;
+    color: #000000;
+    letter-spacing: -0.41px;
+    margin-top: 12px;
+  }
+
+  .header-subtitle {
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 20px;
+    color: #6C6C70;
+    letter-spacing: -0.24px;
+    margin-top: 4px;
+  }
+
+  .header-date {
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 20px;
+    color: #6C6C70;
+    letter-spacing: -0.24px;
+  }
+
+  /* PDF Thumbnail */
+  .pdf-thumbnail {
+    width: 140px;
+    height: 181px;
+    background-color: #FFFFFF;
+    border-radius: 12px;
+    border: 1px solid #C6C6C8;
+    margin: 24px auto 24px auto;
+    padding: 14px 12px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Section Header & Footer */
+  .section-header {
+    font-size: 13px;
+    font-weight: 400;
+    color: #6C6C70;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-left: 16px;
+    margin-bottom: 8px;
+  }
+
+  .section-footer {
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 18px;
+    color: #6C6C70;
+    letter-spacing: -0.08px;
+    padding: 6px 16px 0 16px;
+  }
+
+  /* Inset Grouped Section */
+  .inset-group {
+    background: #FFFFFF;
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 24px;
+  }
+
+  .inset-group-condensed {
+    background: #FFFFFF;
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 0px;
+  }
+
+  /* Rows */
+  .kv-row {
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 11px 16px;
+    position: relative;
+  }
+
+  .kv-label {
+    font-size: 17px;
+    font-weight: 400;
+    color: #000000;
+    letter-spacing: -0.41px;
+  }
+
+  .kv-value {
+    font-size: 17px;
+    font-weight: 400;
+    color: #6C6C70;
+    letter-spacing: -0.41px;
+    text-align: right;
+  }
+
+  .code-text {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 17px;
+    font-weight: 500;
+    color: #000000;
+    letter-spacing: -0.2px;
+  }
+
+  .copy-btn {
+    background: none;
+    border: none;
+    font-size: 17px;
+    font-weight: 400;
+    color: #1F3A64;
+    letter-spacing: -0.41px;
+    cursor: pointer;
+    min-height: 44px;
+    min-width: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 0;
+  }
+
+  .interactive-row {
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 11px 16px;
+    position: relative;
+    cursor: pointer;
+  }
+
+  /* Separator starts 16pt from row's leading edge */
+  .separator {
+    position: absolute;
+    bottom: 0;
+    left: 16px;
+    right: 0;
+    height: 0.5px;
+    background-color: #C6C6C8;
+  }
+
+  /* Bottom Pinned Bar */
+  .pinned-bottom-bar {
+    position: fixed;
+    bottom: 34px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 390px;
+    padding: 12px 16px;
+    background: rgba(242, 242, 247, 0.7);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    z-index: 90;
+  }
+
+  .action-capsule-button {
+    height: 50px;
+    background-color: #1F3A64;
+    color: #FFFFFF;
+    font-size: 17px;
+    font-weight: 600;
+    letter-spacing: -0.41px;
+    border-radius: 25px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border: none;
+    cursor: pointer;
+  }
+
+  /* Home Indicator */
+  .home-indicator-container {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 390px;
+    height: 34px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    padding-bottom: 8px;
+    pointer-events: none;
+    z-index: 100;
+    background: rgba(242, 242, 247, 0.7);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+
+  .home-indicator {
+    width: 134px;
+    height: 5px;
+    background-color: #000000;
+    border-radius: 2.5px;
+  }
+</style>
+</head>
+<body>
+<!-- Status Bar with Dynamic Island -->
+<div class="status-bar">
+<div class="status-time">9:41</div>
+<div class="dynamic-island"></div>
+<div class="status-icons">
+<!-- Cellular Signal -->
+<svg height="12" viewbox="0 0 18 12" width="18">
+<path d="M1 9.5a1 1 0 0 1 1-1h1a1 1 0 0 1 1 1v1.5a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V9.5zm5-3a1 1 0 0 1 1-1h1a1 1 0 0 1 1 1V11a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V6.5zm5-3a1 1 0 0 1 1-1h1a1 1 0 0 1 1 1V11a1 1 0 0 1-1 1h-1a1 1 0 0 1-1-1V3.5zm5-3a1 1 0 0 1 1-1h1a1 1 0 0 1 1 1V11a1 1 0 0 1-1 1h-1a1 1 0 0 1-1-1V.5z"></path>
+</svg>
+<!-- Wi-Fi -->
+<svg height="12" viewbox="0 0 16 12" width="16">
+<path d="M8 3.5c2.4 0 4.6.9 6.2 2.5.4.4.4 1 0 1.4-.4.4-1 .4-1.4 0C11.5 6.1 9.8 5.4 8 5.4s-3.5.7-4.8 2c-.4.4-1 .4-1.4 0-.4-.4-.4-1 0-1.4C3.4 4.4 5.6 3.5 8 3.5zm0-3.5C11.6 0 14.8 1.4 17.2 3.8c.4.4.4 1 0 1.4-.4.4-1 .4-1.4 0C13.6 2.9 10.9 1.7 8 1.7 5.1 1.7 2.4 2.9.2 5.2c-.4.4-1 .4-1.4 0-.4-.4-.4-1 0-1.4C1.2 1.4 4.4 0 8 0zm0 7.8c1.3 0 2.5.5 3.4 1.4.4.4.4 1 0 1.4-.4.4-1 .4-1.4 0-.5-.5-1.2-.8-2-.8s-1.5.3-2 .8c-.4.4-1 .4-1.4 0-.4-.4-.4-1 0-1.4.9-.9 2.1-1.4 3.4-1.4zm0 3.9a1.1 1.1 0 1 1 0-2.2 1.1 1.1 0 0 1 0 2.2z"></path>
+</svg>
+<!-- Battery -->
+<svg height="12" viewbox="0 0 25 12" width="25">
+<rect fill="none" height="10" rx="3" stroke="#000000" stroke-width="1" width="20" x="1" y="1"></rect>
+<rect fill="#000000" height="7" rx="1.5" width="13" x="2.5" y="2.5"></rect>
+<path d="M22.5 4.5v3a1.5 1.5 0 0 0 1.5-1.5v0a1.5 1.5 0 0 0-1.5-1.5z" fill="#000000"></path>
+</svg>
+</div>
+</div>
+<!-- Translucent Liquid Glass Navigation Bar (No Back Button) -->
+<nav class="nav-bar">
+<div class="nav-title">Report</div>
+<button aria-label="Done" class="nav-done-button">
+    Done
+  </button>
+</nav>
+<!-- Main Content -->
+<main class="content">
+<!-- Centered Header -->
+<div class="header-container">
+<!-- SF Symbol checkmark.seal.fill 56pt ink navy #1F3A64 -->
+<svg fill="#1F3A64" height="56" viewbox="0 0 24 24" width="56">
+<path d="M23 12l-2.44-2.79.34-3.69-3.61-.82-1.89-3.2L12 2.96 8.6 1.5 6.71 4.69 3.1 5.5l.34 3.7L1 12l2.44 2.79-.34 3.7 3.61.82L8.6 22.5l3.4-1.47 3.4 1.46 1.89-3.19 3.61-.82-.34-3.69L23 12zm-12.91 4.72l-3.8-3.81 1.48-1.48 2.32 2.33 5.85-5.87 1.48 1.48-7.33 7.35z"></path>
+</svg>
+<h1 class="header-title">Report sealed</h1>
+<div class="header-subtitle">Move-out · Maple Court, Unit 2B</div>
+<div class="header-date">Nov 19, 2026, 4:12 PM</div>
+</div>
+<!-- PDF First-Page Thumbnail (140pt × 181pt, radius 12, border #C6C6C8) -->
+<div aria-hidden="true" class="pdf-thumbnail">
+<!-- Document header bars -->
+<div class="w-10 h-2 bg-[#D1D1D6] rounded mb-2.5"></div>
+<div class="w-full h-1 bg-[#E5E5EA] rounded mb-1.5"></div>
+<div class="w-4/5 h-1 bg-[#E5E5EA] rounded mb-3"></div>
+<div class="w-full h-px bg-[#E5E5EA] mb-3"></div>
+<!-- Doc body placeholder lines -->
+<div class="w-full h-1 bg-[#E5E5EA] rounded mb-1.5"></div>
+<div class="w-5/6 h-1 bg-[#E5E5EA] rounded mb-1.5"></div>
+<div class="w-2/3 h-1 bg-[#E5E5EA] rounded mb-3.5"></div>
+<!-- 2x2 grid of photo placeholder blocks -->
+<div class="grid grid-cols-2 gap-1.5 w-full mb-3">
+<div class="h-10 bg-[#E5E5EA] rounded"></div>
+<div class="h-10 bg-[#E5E5EA] rounded"></div>
+<div class="h-10 bg-[#E5E5EA] rounded"></div>
+<div class="h-10 bg-[#E5E5EA] rounded"></div>
+</div>
+<!-- Doc bottom lines -->
+<div class="w-full h-1 bg-[#E5E5EA] rounded mb-1.5"></div>
+<div class="w-3/4 h-1 bg-[#E5E5EA] rounded"></div>
+</div>
+<!-- Inset Grouped Section: Report Details -->
+<div class="inset-group">
+<div class="kv-row">
+<div class="kv-label">Pages</div>
+<div class="kv-value">8</div>
+<div class="separator"></div>
+</div>
+<div class="kv-row">
+<div class="kv-label">Photos</div>
+<div class="kv-value">19 in 6 rooms</div>
+<div class="separator"></div>
+</div>
+<div class="kv-row">
+<div class="kv-label">Signed by</div>
+<div class="kv-value">Jordan Lee, Alex Morgan</div>
+</div>
+</div>
+<!-- Section: Verification Code -->
+<div class="section-header">VERIFICATION CODE</div>
+<div class="inset-group-condensed">
+<div class="kv-row">
+<div class="code-text">7F3A-92C1-B04E</div>
+<button class="copy-btn">Copy</button>
+<div class="separator"></div>
+</div>
+<div class="interactive-row">
+<div class="kv-label">Verify Report</div>
+<div class="flex items-center">
+<!-- SF Symbol chevron.right -->
+<svg fill="none" height="14" stroke="#C7C7CC" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 8 14" width="8">
+<path d="M1 1l6 6-6 6"></path>
+</svg>
+</div>
+</div>
+</div>
+<div class="section-footer">
+    Verify rechecks this report against the records stored on this iPhone.
+  </div>
+</main>
+<!-- Translucent Pinned Bottom Bar -->
+<div class="pinned-bottom-bar">
+<button class="action-capsule-button">
+<!-- SF Symbol square.and.arrow.up 18pt white -->
+<svg fill="none" height="18" stroke="#FFFFFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="18">
+<path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path>
+<polyline points="16 6 12 2 8 6"></polyline>
+<line x1="12" x2="12" y1="2" y2="15"></line>
+</svg>
+<span>Share PDF</span>
+</button>
+</div>
+<!-- Home Indicator -->
+<div class="home-indicator-container">
+<div class="home-indicator"></div>
+</div>
+</body></html>

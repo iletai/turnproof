@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>Properties</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        colors: {
+          "primary": "#1F3A64",
+          "background-light": "#F2F2F7",
+          "background-dark": "#14181e",
+        },
+        fontFamily: {
+          "display": ["-apple-system", "BlinkMacSystemFont", "SF Pro Text", "SF Pro Display", "sans-serif"]
+        },
+        borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+      },
+    },
+  }
+</script>
+<style>
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-font-smoothing: antialiased;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    background-color: #F2F2F7;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", sans-serif;
+    color: #000000;
+    width: 100%;
+    max-width: 390px;
+    min-height: 844px;
+    margin: 0 auto;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  /* Safe Area / Status Bar */
+  .status-bar {
+    position: sticky;
+    top: 0;
+    width: 100%;
+    height: 47px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 24px;
+    z-index: 100;
+    background: transparent;
+  }
+
+  .status-time {
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: -0.3px;
+    color: #000000;
+  }
+
+  .dynamic-island {
+    position: absolute;
+    top: 11px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 125px;
+    height: 35px;
+    background-color: #000000;
+    border-radius: 20px;
+  }
+
+  .status-icons {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .status-icons svg {
+    display: block;
+    fill: #000000;
+  }
+
+  /* Translucent Liquid Glass Navigation Bar / Toolbar */
+  .nav-bar {
+    position: sticky;
+    top: 47px;
+    width: 100%;
+    height: 44px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 0 16px;
+    z-index: 90;
+    background: rgba(242, 242, 247, 0.7);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+
+  .toolbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .plain-button {
+    background: none;
+    border: none;
+    padding: 8px;
+    min-width: 44px;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+
+  .plain-button.settings svg {
+    fill: #000000;
+  }
+
+  .plain-button.plus svg {
+    fill: #1F3A64;
+  }
+
+  /* Main Scroll Content */
+  .content {
+    padding: 0 16px 40px 16px;
+  }
+
+  /* Large Title */
+  .large-title {
+    font-size: 34px;
+    font-weight: 700;
+    letter-spacing: 0.37px;
+    line-height: 41px;
+    color: #000000;
+    margin-top: 4px;
+    margin-bottom: 20px;
+  }
+
+  /* Section Header */
+  .section-header {
+    font-size: 13px;
+    font-weight: 400;
+    color: #6C6C70;
+    text-transform: uppercase;
+    letter-spacing: -0.08px;
+    margin-left: 16px;
+    margin-bottom: 8px;
+  }
+
+  /* Inset Grouped Section */
+  .inset-group {
+    background: #FFFFFF;
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 26px;
+  }
+
+  /* Row Base */
+  .row-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    position: relative;
+    cursor: pointer;
+  }
+
+  /* Continue Inspection Row */
+  .continue-row {
+    min-height: 72px;
+  }
+
+  .continue-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding-right: 12px;
+  }
+
+  .title-primary {
+    font-size: 17px;
+    font-weight: 600;
+    line-height: 22px;
+    color: #000000;
+    letter-spacing: -0.41px;
+  }
+
+  .subtitle-secondary {
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 20px;
+    color: #6C6C70;
+    letter-spacing: -0.24px;
+  }
+
+  .progress-container {
+    width: 100%;
+    height: 4px;
+    background-color: #E5E5EA;
+    border-radius: 2px;
+    margin-top: 6px;
+    overflow: hidden;
+  }
+
+  .progress-bar-fill {
+    height: 100%;
+    width: 66.6%;
+    background-color: #1F3A64;
+    border-radius: 2px;
+  }
+
+  /* All Properties Rows */
+  .property-row {
+    min-height: 60px;
+  }
+
+  .property-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    padding-right: 12px;
+  }
+
+  .status-line {
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 18px;
+    color: #6C6C70;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 2px;
+  }
+
+  .status-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .status-icon.orange svg {
+    color: #C93400;
+  }
+
+  .status-icon.green svg {
+    fill: #248A3D;
+  }
+
+  /* Disclosure Chevron */
+  .chevron {
+    flex-shrink: 0;
+    width: 8px;
+    height: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .chevron svg {
+    fill: #C7C7CC;
+  }
+
+  /* Separator starts 16pt from row's leading edge */
+  .separator {
+    position: absolute;
+    bottom: 0;
+    left: 16px;
+    right: 0;
+    height: 0.5px;
+    background-color: #C6C6C8;
+  }
+
+  /* Home Indicator */
+  .home-indicator-container {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 390px;
+    height: 34px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    padding-bottom: 8px;
+    pointer-events: none;
+    z-index: 100;
+  }
+
+  .home-indicator {
+    width: 139px;
+    height: 5px;
+    background-color: #000000;
+    border-radius: 2.5px;
+  }
+</style>
+<style id="dark-mode-overrides">
+  body {
+    background-color: #000000 !important;
+    color: #FFFFFF !important;
+  }
+  .status-time {
+    color: #FFFFFF !important;
+  }
+  .nav-bar {
+    background: rgba(28, 28, 30, 0.8) !important;
+  }
+  .large-title {
+    color: #FFFFFF !important;
+  }
+  .section-header {
+    color: #AEAEB2 !important;
+  }
+  .inset-group {
+    background: #1C1C1E !important;
+  }
+  .title-primary {
+    color: #FFFFFF !important;
+  }
+  .subtitle-secondary {
+    color: #AEAEB2 !important;
+  }
+  .status-line {
+    color: #AEAEB2 !important;
+  }
+  .progress-container {
+    background-color: #3A3A3C !important;
+  }
+  .progress-bar-fill {
+    background-color: #9DB8E8 !important;
+  }
+  .chevron svg path {
+    fill: #48484A !important;
+  }
+  .separator {
+    background-color: #38383A !important;
+  }
+  .home-indicator {
+    background-color: #FFFFFF !important;
+    opacity: 0.8 !important;
+  }
+</style></head>
+<body>
+<!-- Status Bar with Dynamic Island -->
+<div class="status-bar">
+<div class="status-time">9:41</div>
+<div class="dynamic-island" style="border: 1px solid #2C2C2E; box-sizing: border-box; background-color: #000000;"></div>
+<div class="status-icons"><!-- Cellular Signal -->
+<svg height="12" viewbox="0 0 18 12" width="18">
+<path d="M1 9.5a1 1 0 0 1 1-1h1a1 1 0 0 1 1 1v1.5a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V9.5zm5-3a1 1 0 0 1 1-1h1a1 1 0 0 1 1 1V11a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V6.5zm5-3a1 1 0 0 1 1-1h1a1 1 0 0 1 1 1V11a1 1 0 0 1-1 1h-1a1 1 0 0 1-1-1V3.5zm5-3a1 1 0 0 1 1-1h1a1 1 0 0 1 1 1V11a1 1 0 0 1-1 1h-1a1 1 0 0 1-1-1V.5z" fill="#FFFFFF"></path>
+</svg>
+<!-- Wi-Fi -->
+<svg height="12" viewbox="0 0 16 12" width="16">
+<path d="M8 3.5c2.4 0 4.6.9 6.2 2.5.4.4.4 1 0 1.4-.4.4-1 .4-1.4 0C11.5 6.1 9.8 5.4 8 5.4s-3.5.7-4.8 2c-.4.4-1 .4-1.4 0-.4-.4-.4-1 0-1.4C3.4 4.4 5.6 3.5 8 3.5zm0-3.5C11.6 0 14.8 1.4 17.2 3.8c.4.4.4 1 0 1.4-.4.4-1 .4-1.4 0C13.6 2.9 10.9 1.7 8 1.7 5.1 1.7 2.4 2.9.2 5.2c-.4.4-1 .4-1.4 0-.4-.4-.4-1 0-1.4C1.2 1.4 4.4 0 8 0zm0 7.8c1.3 0 2.5.5 3.4 1.4.4.4.4 1 0 1.4-.4.4-1 .4-1.4 0-.5-.5-1.2-.8-2-.8s-1.5.3-2 .8c-.4.4-1 .4-1.4 0-.4-.4-.4-1 0-1.4.9-.9 2.1-1.4 3.4-1.4zm0 3.9a1.1 1.1 0 1 1 0-2.2 1.1 1.1 0 0 1 0 2.2z" fill="#FFFFFF"></path>
+</svg>
+<!-- Battery -->
+<svg height="12" viewbox="0 0 25 12" width="25">
+<rect fill="none" height="10" rx="3" stroke="#FFFFFF" stroke-width="1" width="20" x="1" y="1"></rect>
+<rect fill="#FFFFFF" height="7" rx="1.5" width="13" x="2.5" y="2.5"></rect>
+<path d="M22.5 4.5v3a1.5 1.5 0 0 0 1.5-1.5v0a1.5 1.5 0 0 0-1.5-1.5z" fill="#FFFFFF"></path>
+</svg></div>
+</div>
+<!-- Translucent Navigation Bar / Toolbar -->
+<nav class="nav-bar" style="background: transparent !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important;">
+<div class="toolbar-actions"><!-- gearshape (Settings) -->
+<button aria-label="Settings" class="plain-button settings">
+<svg height="22" viewbox="0 0 24 24" width="22">
+<path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58a.49.49 0 0 0 .12-.61l-1.92-3.32a.488.488 0 0 0-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.484.484 0 0 0-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58a.49.49 0 0 0-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z" fill="#FFFFFF"></path>
+</svg>
+</button>
+<!-- plus (Add property) -->
+<button aria-label="Add property" class="plain-button plus">
+<svg height="22" viewbox="0 0 24 24" width="22">
+<path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" fill="#FFFFFF"></path>
+</svg>
+</button></div>
+</nav>
+<!-- Content -->
+<main class="content">
+<!-- Large Title -->
+<h1 class="large-title">Properties</h1>
+<!-- CONTINUE Section -->
+<div class="section-header">CONTINUE</div>
+<div class="inset-group">
+<div class="row-item continue-row">
+<div class="continue-content">
+<div class="title-primary">Continue inspection</div>
+<div class="subtitle-secondary">Maple Court, Unit 2B · 4 of 6 rooms</div>
+<div class="progress-container">
+<div class="progress-bar-fill"></div>
+</div>
+</div>
+<div class="chevron">
+<svg height="13" viewbox="0 0 8 13" width="8">
+<path d="M1.5 0L0 1.5 4.8 6.3 0 11.1 1.5 12.6l6.3-6.3z"></path>
+</svg>
+</div>
+</div>
+</div>
+<!-- ALL PROPERTIES Section -->
+<div class="section-header">ALL PROPERTIES</div>
+<div class="inset-group">
+<!-- Item A -->
+<div class="row-item property-row">
+<div class="property-content">
+<div class="title-primary">Maple Court · Unit 2B</div>
+<div class="subtitle-secondary">1428 Maple Ave, Portland, OR</div>
+<div class="status-line">
+<span class="status-icon orange">
+<!-- SF Symbol circle.dotted outline icon -->
+<svg fill="none" height="14" stroke="#FF9F0A" stroke-dasharray="2.5 4.2" stroke-linecap="round" stroke-width="2.3" viewbox="0 0 24 24" width="14">
+<circle cx="12" cy="12" r="9.5"></circle>
+</svg>
+</span>
+<span>In progress</span>
+</div>
+</div>
+<div class="chevron">
+<svg height="13" viewbox="0 0 8 13" width="8">
+<path d="M1.5 0L0 1.5 4.8 6.3 0 11.1 1.5 12.6l6.3-6.3z"></path>
+</svg>
+</div>
+<div class="separator"></div>
+</div>
+<!-- Item B -->
+<div class="row-item property-row">
+<div class="property-content">
+<div class="title-primary">Cedar House · Unit 1</div>
+<div class="subtitle-secondary">77 Cedar St, Portland, OR</div>
+<div class="status-line">
+<span class="status-icon green">
+<!-- checkmark.seal.fill SF symbol -->
+<svg height="14" viewbox="0 0 24 24" width="14">
+<path d="M23 12l-2.44-2.79.34-3.69-3.61-.82-1.89-3.2L12 2.96 8.6 1.5 6.71 4.69 3.1 5.5l.34 3.7L1 12l2.44 2.79-.34 3.7 3.61.82L8.6 22.5l3.4-1.47 3.4 1.46 1.89-3.19 3.61-.82-.34-3.69L23 12zm-12.91 4.72l-3.8-3.81 1.48-1.48 2.32 2.33 5.85-5.87 1.48 1.48-7.33 7.35z" fill="#30D158"></path>
+</svg>
+</span>
+<span>Sealed Oct 2, 2026</span>
+</div>
+</div>
+<div class="chevron">
+<svg height="13" viewbox="0 0 8 13" width="8">
+<path d="M1.5 0L0 1.5 4.8 6.3 0 11.1 1.5 12.6l6.3-6.3z"></path>
+</svg>
+</div>
+<div class="separator"></div>
+</div>
+<!-- Item C -->
+<div class="row-item property-row">
+<div class="property-content">
+<div class="title-primary">Birch Lofts · Unit 5A</div>
+<div class="subtitle-secondary">310 Birch Rd, Beaverton, OR</div>
+<div class="status-line">
+<span class="status-icon green">
+<!-- checkmark.seal.fill SF symbol -->
+<svg height="14" viewbox="0 0 24 24" width="14">
+<path d="M23 12l-2.44-2.79.34-3.69-3.61-.82-1.89-3.2L12 2.96 8.6 1.5 6.71 4.69 3.1 5.5l.34 3.7L1 12l2.44 2.79-.34 3.7 3.61.82L8.6 22.5l3.4-1.47 3.4 1.46 1.89-3.19 3.61-.82-.34-3.69L23 12zm-12.91 4.72l-3.8-3.81 1.48-1.48 2.32 2.33 5.85-5.87 1.48 1.48-7.33 7.35z" fill="#30D158"></path>
+</svg>
+</span>
+<span>Sealed Aug 14, 2026</span>
+</div>
+</div>
+<div class="chevron">
+<svg height="13" viewbox="0 0 8 13" width="8">
+<path d="M1.5 0L0 1.5 4.8 6.3 0 11.1 1.5 12.6l6.3-6.3z"></path>
+</svg>
+</div>
+</div>
+</div>
+</main>
+<!-- Home Indicator -->
+<div class="home-indicator-container">
+<div class="home-indicator"></div>
+</div>
+</body></html>

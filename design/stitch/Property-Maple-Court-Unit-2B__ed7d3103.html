@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>Maple Court · Unit 2B</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        colors: {
+          "primary": "#1F3A64",
+          "background-light": "#F2F2F7",
+          "background-dark": "#14181e",
+        },
+        fontFamily: {
+          "display": ["-apple-system", "BlinkMacSystemFont", "SF Pro Text", "SF Pro Display", "sans-serif"]
+        },
+        borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+      },
+    },
+  }
+</script>
+<style>
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-font-smoothing: antialiased;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    background-color: #F2F2F7;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", sans-serif;
+    color: #000000;
+    width: 100%;
+    max-width: 390px;
+    min-height: 844px;
+    margin: 0 auto;
+    position: relative;
+    overflow-x: hidden;
+    padding-bottom: 100px;
+  }
+
+  /* Safe Area / Status Bar */
+  .status-bar {
+    position: sticky;
+    top: 0;
+    width: 100%;
+    height: 47px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 24px;
+    z-index: 100;
+    background: transparent;
+  }
+
+  .status-time {
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: -0.3px;
+    color: #000000;
+  }
+
+  .dynamic-island {
+    position: absolute;
+    top: 11px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 125px;
+    height: 35px;
+    background-color: #000000;
+    border-radius: 20px;
+  }
+
+  .status-icons {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .status-icons svg {
+    display: block;
+    fill: #000000;
+  }
+
+  /* Translucent Liquid Glass Navigation Bar */
+  .nav-bar {
+    position: sticky;
+    top: 47px;
+    width: 100%;
+    height: 44px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 8px;
+    z-index: 90;
+    background: rgba(242, 242, 247, 0.7);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+
+  .nav-back-button {
+    background: none;
+    border: none;
+    height: 44px;
+    min-width: 44px;
+    padding: 0 8px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: #1F3A64;
+    font-size: 17px;
+    font-weight: 400;
+    letter-spacing: -0.41px;
+    cursor: pointer;
+  }
+
+  .nav-title {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 17px;
+    font-weight: 600;
+    letter-spacing: -0.41px;
+    color: #000000;
+    white-space: nowrap;
+    pointer-events: none;
+  }
+
+  .nav-action-button {
+    background: none;
+    border: none;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #000000;
+  }
+
+  /* Main Scroll Content */
+  .content {
+    padding: 16px 16px 32px 16px;
+  }
+
+  /* Section Header */
+  .section-header {
+    font-size: 13px;
+    font-weight: 400;
+    color: #6C6C70;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-left: 16px;
+    margin-bottom: 8px;
+  }
+
+  /* Inset Grouped Section */
+  .inset-group {
+    background: #FFFFFF;
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 24px;
+  }
+
+  /* Key-Value Row */
+  .kv-row {
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 11px 16px;
+    position: relative;
+  }
+
+  .kv-label {
+    font-size: 17px;
+    font-weight: 400;
+    color: #000000;
+    letter-spacing: -0.41px;
+  }
+
+  .kv-value {
+    font-size: 17px;
+    font-weight: 400;
+    color: #6C6C70;
+    letter-spacing: -0.41px;
+    text-align: right;
+  }
+
+  /* Row Base */
+  .row-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px;
+    position: relative;
+    cursor: pointer;
+  }
+
+  /* In Progress Row */
+  .inprogress-row {
+    min-height: 72px;
+  }
+
+  .inprogress-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding-right: 12px;
+  }
+
+  .title-primary {
+    font-size: 17px;
+    font-weight: 600;
+    line-height: 22px;
+    color: #000000;
+    letter-spacing: -0.41px;
+  }
+
+  .subtitle-secondary {
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 20px;
+    color: #6C6C70;
+    letter-spacing: -0.24px;
+    margin-top: 2px;
+  }
+
+  .progress-flex-line {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 8px;
+  }
+
+  .progress-container {
+    flex: 1;
+    height: 4px;
+    background-color: #E5E5EA;
+    border-radius: 9999px;
+    overflow: hidden;
+  }
+
+  .progress-bar-fill {
+    height: 100%;
+    width: 66%;
+    background-color: #1F3A64;
+    border-radius: 9999px;
+  }
+
+  .progress-label {
+    font-size: 13px;
+    font-weight: 400;
+    color: #6C6C70;
+    letter-spacing: -0.08px;
+    white-space: nowrap;
+  }
+
+  /* Reports Row */
+  .reports-row {
+    min-height: 60px;
+    align-items: center;
+  }
+
+  .report-leading-icon {
+    width: 22px;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .report-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    margin-left: 12px;
+    padding-right: 12px;
+  }
+
+  /* Disclosure Chevron */
+  .chevron {
+    flex-shrink: 0;
+    width: 8px;
+    height: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .chevron svg {
+    fill: #C7C7CC;
+  }
+
+  /* Separator starts 16pt from row's leading edge */
+  .separator {
+    position: absolute;
+    bottom: 0;
+    left: 16px;
+    right: 0;
+    height: 0.5px;
+    background-color: #C6C6C8;
+  }
+
+  /* Bottom Pinned Bar */
+  .pinned-bottom-bar {
+    position: fixed;
+    bottom: 34px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 390px;
+    padding: 12px 16px;
+    background: rgba(242, 242, 247, 0.7);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    z-index: 90;
+  }
+
+  .action-capsule-button {
+    height: 50px;
+    background-color: #1F3A64;
+    color: #FFFFFF;
+    font-size: 17px;
+    font-weight: 600;
+    letter-spacing: -0.41px;
+    border-radius: 9999px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    cursor: pointer;
+  }
+
+  /* Home Indicator */
+  .home-indicator-container {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 390px;
+    height: 34px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    padding-bottom: 8px;
+    pointer-events: none;
+    z-index: 100;
+    background: rgba(242, 242, 247, 0.7);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+
+  .home-indicator {
+    width: 139px;
+    height: 5px;
+    background-color: #000000;
+    border-radius: 2.5px;
+  }
+</style>
+</head>
+<body>
+<!-- Status Bar with Dynamic Island -->
+<div class="status-bar">
+<div class="status-time">9:41</div>
+<div class="dynamic-island"></div>
+<div class="status-icons">
+<!-- Cellular Signal -->
+<svg height="12" viewbox="0 0 18 12" width="18">
+<path d="M1 9.5a1 1 0 0 1 1-1h1a1 1 0 0 1 1 1v1.5a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V9.5zm5-3a1 1 0 0 1 1-1h1a1 1 0 0 1 1 1V11a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V6.5zm5-3a1 1 0 0 1 1-1h1a1 1 0 0 1 1 1V11a1 1 0 0 1-1 1h-1a1 1 0 0 1-1-1V3.5zm5-3a1 1 0 0 1 1-1h1a1 1 0 0 1 1 1V11a1 1 0 0 1-1 1h-1a1 1 0 0 1-1-1V.5z"></path>
+</svg>
+<!-- Wi-Fi -->
+<svg height="12" viewbox="0 0 16 12" width="16">
+<path d="M8 3.5c2.4 0 4.6.9 6.2 2.5.4.4.4 1 0 1.4-.4.4-1 .4-1.4 0C11.5 6.1 9.8 5.4 8 5.4s-3.5.7-4.8 2c-.4.4-1 .4-1.4 0-.4-.4-.4-1 0-1.4C3.4 4.4 5.6 3.5 8 3.5zm0-3.5C11.6 0 14.8 1.4 17.2 3.8c.4.4.4 1 0 1.4-.4.4-1 .4-1.4 0C13.6 2.9 10.9 1.7 8 1.7 5.1 1.7 2.4 2.9.2 5.2c-.4.4-1 .4-1.4 0-.4-.4-.4-1 0-1.4C1.2 1.4 4.4 0 8 0zm0 7.8c1.3 0 2.5.5 3.4 1.4.4.4.4 1 0 1.4-.4.4-1 .4-1.4 0-.5-.5-1.2-.8-2-.8s-1.5.3-2 .8c-.4.4-1 .4-1.4 0-.4-.4-.4-1 0-1.4.9-.9 2.1-1.4 3.4-1.4zm0 3.9a1.1 1.1 0 1 1 0-2.2 1.1 1.1 0 0 1 0 2.2z"></path>
+</svg>
+<!-- Battery -->
+<svg height="12" viewbox="0 0 25 12" width="25">
+<rect fill="none" height="10" rx="3" stroke="#000000" stroke-width="1" width="20" x="1" y="1"></rect>
+<rect fill="#000000" height="7" rx="1.5" width="13" x="2.5" y="2.5"></rect>
+<path d="M22.5 4.5v3a1.5 1.5 0 0 0 1.5-1.5v0a1.5 1.5 0 0 0-1.5-1.5z" fill="#000000"></path>
+</svg>
+</div>
+</div>
+<!-- Translucent Liquid Glass Navigation Bar -->
+<nav class="nav-bar">
+<button aria-label="Properties" class="nav-back-button">
+<!-- SF Symbol chevron.left -->
+<svg fill="none" height="20" stroke="#1F3A64" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" viewbox="0 0 12 20" width="12">
+<path d="M10 2L2 10L10 18"></path>
+</svg>
+<span>Properties</span>
+</button>
+<div class="nav-title">Maple Court · Unit 2B</div>
+<button aria-label="More options" class="nav-action-button">
+<!-- SF Symbol ellipsis.circle -->
+<svg fill="none" height="22" stroke="#000000" stroke-linecap="round" stroke-width="1.8" viewbox="0 0 24 24" width="22">
+<circle cx="12" cy="12" r="10"></circle>
+<circle cx="7.5" cy="12" fill="#000000" r="1.1"></circle>
+<circle cx="12" cy="12" fill="#000000" r="1.1"></circle>
+<circle cx="16.5" cy="12" fill="#000000" r="1.1"></circle>
+</svg>
+</button>
+</nav>
+<!-- Content -->
+<main class="content">
+<!-- Section 1 (no header): Address & Landlord -->
+<div class="inset-group">
+<div class="kv-row">
+<div class="kv-label">Address</div>
+<div class="kv-value">1428 Maple Ave, Portland, OR</div>
+<div class="separator"></div>
+</div>
+<div class="kv-row">
+<div class="kv-label">Landlord</div>
+<div class="kv-value">Alex Morgan</div>
+</div>
+</div>
+<!-- Section 2: IN PROGRESS -->
+<div class="section-header">IN PROGRESS</div>
+<div class="inset-group">
+<div class="row-item inprogress-row">
+<div class="inprogress-content">
+<div class="title-primary">Move-out inspection</div>
+<div class="subtitle-secondary">Tenant Jordan Lee · Started Nov 19, 2026</div>
+<div class="progress-flex-line">
+<div class="progress-container">
+<div class="progress-bar-fill"></div>
+</div>
+<span class="progress-label">4 of 6 rooms</span>
+</div>
+</div>
+<div class="chevron">
+<svg fill="none" height="14" stroke="#C7C7CC" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 8 14" width="8">
+<path d="M1 1l6 6-6 6"></path>
+</svg>
+</div>
+</div>
+</div>
+<!-- Section 3: REPORTS -->
+<div class="section-header">REPORTS</div>
+<div class="inset-group">
+<div class="row-item reports-row">
+<div class="report-leading-icon">
+<!-- SF Symbol checkmark.seal.fill -->
+<svg fill="#248A3D" height="22" viewbox="0 0 24 24" width="22">
+<path d="M23 12l-2.44-2.79.34-3.69-3.61-.82-1.89-3.2L12 2.96 8.6 1.5 6.71 4.69 3.1 5.5l.34 3.7L1 12l2.44 2.79-.34 3.7 3.61.82L8.6 22.5l3.4-1.47 3.4 1.46 1.89-3.19 3.61-.82-.34-3.69L23 12zm-12.91 4.72l-3.8-3.81 1.48-1.48 2.32 2.33 5.85-5.87 1.48 1.48-7.33 7.35z"></path>
+</svg>
+</div>
+<div class="report-content">
+<div class="title-primary">Move-in report</div>
+<div class="subtitle-secondary">Sealed Jan 6, 2026 · 6 rooms · 22 photos</div>
+</div>
+<div class="chevron">
+<svg fill="none" height="14" stroke="#C7C7CC" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 8 14" width="8">
+<path d="M1 1l6 6-6 6"></path>
+</svg>
+</div>
+</div>
+</div>
+</main>
+<!-- Translucent Pinned Bottom Bar -->
+<div class="pinned-bottom-bar">
+<button class="action-capsule-button">
+    Continue Inspection
+  </button>
+</div>
+<!-- Home Indicator -->
+<div class="home-indicator-container">
+<div class="home-indicator"></div>
+</div>
+</body></html>

@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>Subscription · Paywall</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        colors: {
+          "primary": "#1F3A64",
+          "background-light": "#F2F2F7",
+          "background-dark": "#14181e",
+        },
+        fontFamily: {
+          "display": ["-apple-system", "BlinkMacSystemFont", "SF Pro Text", "SF Pro Display", "sans-serif"]
+        },
+        borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+      },
+    },
+  }
+</script>
+<style>
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-font-smoothing: antialiased;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    background-color: #000000;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", sans-serif;
+    color: #000000;
+    width: 100%;
+    max-width: 390px;
+    height: 844px;
+    margin: 0 auto;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Behind the sheet: Dimmed background representing Properties screen */
+  .dimmed-parent-screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 70px;
+    background: #E5E5EA;
+    opacity: 0.6;
+    display: flex;
+    flex-direction: column;
+    padding: 48px 16px 0 16px;
+    z-index: 10;
+  }
+
+  .dimmed-card-peek {
+    width: 100%;
+    height: 30px;
+    background: #FFFFFF;
+    border-radius: 10px 10px 0 0;
+    opacity: 0.8;
+  }
+
+  /* Status Bar / Dynamic Island */
+  .status-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 47px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 24px;
+    z-index: 100;
+    background: transparent;
+  }
+
+  .status-time {
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: -0.3px;
+    color: #FFFFFF;
+  }
+
+  .dynamic-island {
+    position: absolute;
+    top: 11px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 125px;
+    height: 35px;
+    background-color: #000000;
+    border-radius: 20px;
+  }
+
+  .status-icons {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .status-icons svg {
+    display: block;
+    fill: #FFFFFF;
+  }
+
+  /* Modal Sheet */
+  .sheet-container {
+    position: absolute;
+    top: 54px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: #F2F2F7;
+    border-top-left-radius: 30px;
+    border-top-right-radius: 30px;
+    z-index: 50;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  /* Sheet Header Controls */
+  .sheet-header {
+    height: 44px;
+    width: 100%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .grabber {
+    width: 36px;
+    height: 5px;
+    border-radius: 2.5px;
+    background-color: rgba(60, 60, 67, 0.3);
+  }
+
+  .close-button {
+    position: absolute;
+    right: 16px;
+    top: 0;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+
+  .close-glass-circle {
+    width: 30px;
+    height: 30px;
+    border-radius: 15px;
+    background: rgba(118, 118, 128, 0.12);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Scrollable Content */
+  .sheet-body {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 0 16px 200px 16px;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .title-h1 {
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 34px;
+    color: #000000;
+    letter-spacing: 0.36px;
+    text-align: center;
+  }
+
+  .subtitle-text {
+    font-size: 17px;
+    font-weight: 400;
+    line-height: 22px;
+    color: #6C6C70;
+    letter-spacing: -0.41px;
+    text-align: center;
+  }
+
+  /* Features */
+  .feature-row {
+    height: 44px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .feature-icon {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .feature-text {
+    font-size: 17px;
+    font-weight: 400;
+    line-height: 22px;
+    color: #000000;
+    letter-spacing: -0.41px;
+  }
+
+  /* Plan Picker */
+  .plan-group {
+    background-color: #FFFFFF;
+    border-radius: 12px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .plan-row {
+    min-height: 60px;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    box-sizing: border-box;
+  }
+
+  .plan-row-selected {
+    border: 2px solid #1F3A64;
+    border-radius: 12px;
+    z-index: 2;
+  }
+
+  .plan-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .radio-selected {
+    width: 22px;
+    height: 22px;
+    border-radius: 11px;
+    background-color: #1F3A64;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .radio-unselected {
+    width: 22px;
+    height: 22px;
+    border-radius: 11px;
+    border: 1.5px solid #C6C6C8;
+    background-color: transparent;
+    flex-shrink: 0;
+  }
+
+  .plan-titles {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .plan-name {
+    font-size: 17px;
+    font-weight: 600;
+    line-height: 22px;
+    color: #000000;
+    letter-spacing: -0.41px;
+  }
+
+  .plan-detail {
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 20px;
+    color: #6C6C70;
+    letter-spacing: -0.24px;
+  }
+
+  .plan-sub-trailing {
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 20px;
+    color: #6C6C70;
+    letter-spacing: -0.24px;
+    text-align: right;
+  }
+
+  .row-separator {
+    position: absolute;
+    bottom: 0;
+    left: 50px;
+    right: 0;
+    height: 0.5px;
+    background-color: #C6C6C8;
+  }
+
+  /* Pinned Bottom Area */
+  .pinned-bottom-section {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 12px 16px 42px 16px;
+    background: rgba(242, 242, 247, 0.94);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    z-index: 60;
+    border-top: 0.5px solid rgba(60, 60, 67, 0.1);
+  }
+
+  .capsule-cta-button {
+    height: 50px;
+    width: 100%;
+    background-color: #1F3A64;
+    border-radius: 9999px;
+    border: none;
+    color: #FFFFFF;
+    font-size: 17px;
+    font-weight: 600;
+    letter-spacing: -0.41px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+
+  .legal-note {
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 17px;
+    color: #6C6C70;
+    text-align: center;
+    margin-top: 8px;
+    letter-spacing: -0.08px;
+  }
+
+  .legal-links {
+    margin-top: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+  }
+
+  .legal-link-btn {
+    font-size: 13px;
+    font-weight: 400;
+    color: #1F3A64;
+    letter-spacing: -0.08px;
+    text-decoration: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+  }
+
+  /* Home Indicator */
+  .home-indicator {
+    position: absolute;
+    bottom: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 134px;
+    height: 5px;
+    border-radius: 3px;
+    background-color: #000000;
+    pointer-events: none;
+    z-index: 100;
+  }
+</style>
+</head>
+<body>
+<!-- Status Bar -->
+<div class="status-bar">
+<div class="status-time">9:41</div>
+<div class="dynamic-island"></div>
+<div class="status-icons">
+<!-- Cellular Signal -->
+<svg height="12" viewbox="0 0 18 12" width="18">
+<path d="M1 9.5a1 1 0 0 1 1-1h1a1 1 0 0 1 1 1v1.5a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V9.5zm5-3a1 1 0 0 1 1-1h1a1 1 0 0 1 1 1V11a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V6.5zm5-3a1 1 0 0 1 1-1h1a1 1 0 0 1 1 1V11a1 1 0 0 1-1 1h-1a1 1 0 0 1-1-1V3.5zm5-3a1 1 0 0 1 1-1h1a1 1 0 0 1 1 1V11a1 1 0 0 1-1 1h-1a1 1 0 0 1-1-1V.5z"></path>
+</svg>
+<!-- Wi-Fi -->
+<svg height="12" viewbox="0 0 16 12" width="16">
+<path d="M8 3.5c2.4 0 4.6.9 6.2 2.5.4.4.4 1 0 1.4-.4.4-1 .4-1.4 0C11.5 6.1 9.8 5.4 8 5.4s-3.5.7-4.8 2c-.4.4-1 .4-1.4 0-.4-.4-.4-1 0-1.4C3.4 4.4 5.6 3.5 8 3.5zm0-3.5C11.6 0 14.8 1.4 17.2 3.8c.4.4.4 1 0 1.4-.4.4-1 .4-1.4 0C13.6 2.9 10.9 1.7 8 1.7 5.1 1.7 2.4 2.9.2 5.2c-.4.4-1 .4-1.4 0-.4-.4-.4-1 0-1.4C1.2 1.4 4.4 0 8 0zm0 7.8c1.3 0 2.5.5 3.4 1.4.4.4.4 1 0 1.4-.4.4-1 .4-1.4 0-.5-.5-1.2-.8-2-.8s-1.5.3-2 .8c-.4.4-1 .4-1.4 0-.4-.4-.4-1 0-1.4.9-.9 2.1-1.4 3.4-1.4zm0 3.9a1.1 1.1 0 1 1 0-2.2 1.1 1.1 0 0 1 0 2.2z"></path>
+</svg>
+<!-- Battery -->
+<svg height="12" viewbox="0 0 25 12" width="25">
+<rect fill="none" height="10" rx="3" stroke="#FFFFFF" stroke-width="1" width="20" x="1" y="1"></rect>
+<rect fill="#FFFFFF" height="7" rx="1.5" width="13" x="2.5" y="2.5"></rect>
+<path d="M22.5 4.5v3a1.5 1.5 0 0 0 1.5-1.5v0a1.5 1.5 0 0 0-1.5-1.5z" fill="#FFFFFF"></path>
+</svg>
+</div>
+</div>
+<!-- Dimmed Parent Screen Background Layer -->
+<div class="dimmed-parent-screen">
+<div class="dimmed-card-peek"></div>
+</div>
+<!-- Modal Sheet -->
+<div class="sheet-container">
+<!-- Sheet Top Header / Grabber / Close -->
+<div class="sheet-header">
+<div class="grabber"></div>
+<button aria-label="Close" class="close-button">
+<div class="close-glass-circle">
+<!-- SF Symbol xmark -->
+<svg fill="none" height="13" stroke="#1F3A64" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" viewbox="0 0 14 14" width="13">
+<line x1="2" x2="12" y1="2" y2="12"></line>
+<line x1="12" x2="2" y1="2" y2="12"></line>
+</svg>
+</div>
+</button>
+</div>
+<!-- Sheet Scrollable Content -->
+<main class="sheet-body">
+<!-- Icon & Hero Titles -->
+<div style="display: flex; flex-direction: column; align-items: center; margin-top: 8px;">
+<!-- SF Symbol checkmark.seal.fill 48pt ink navy -->
+<svg fill="#1F3A64" height="48" viewbox="0 0 24 24" width="48">
+<path d="M23 12l-2.44-2.79.34-3.69-3.61-.82-1.89-3.2L12 2.96 8.6 1.5 6.71 4.69 3.1 5.5l.34 3.7L1 12l2.44 2.79-.34 3.7 3.61.82L8.6 22.5l3.4-1.47 3.4 1.46 1.89-3.19 3.61-.82-.34-3.69L23 12zm-12.91 4.72l-3.8-3.81 1.48-1.48 2.32 2.33 5.85-5.87 1.48 1.48-7.33 7.35z"></path>
+</svg>
+<div class="title-h1" style="margin-top: 12px;">Unlimited condition reports</div>
+<div class="subtitle-text" style="margin-top: 8px; max-width: 330px;">Your first report was free. Subscribe to seal and share every inspection.</div>
+</div>
+<!-- Feature Rows -->
+<div style="margin-top: 24px; display: flex; flex-direction: column;">
+<!-- Feature 1: doc.badge.plus -->
+<div class="feature-row">
+<div class="feature-icon">
+<svg fill="none" height="22" stroke="#1F3A64" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="22">
+<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+<polyline points="14 2 14 8 20 8"></polyline>
+<line x1="12" x2="12" y1="12" y2="18"></line>
+<line x1="9" x2="15" y1="15" y2="15"></line>
+</svg>
+</div>
+<div class="feature-text">Seal and share unlimited reports</div>
+</div>
+<!-- Feature 2: arrow.left.arrow.right -->
+<div class="feature-row">
+<div class="feature-icon">
+<svg fill="none" height="22" stroke="#1F3A64" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="22">
+<polyline points="7 8 3 12 7 16"></polyline>
+<line x1="3" x2="21" y1="12" y2="12"></line>
+<polyline points="17 16 21 12 17 8"></polyline>
+</svg>
+</div>
+<div class="feature-text">Move-in, move-out and periodic inspections</div>
+</div>
+<!-- Feature 3: iphone -->
+<div class="feature-row">
+<div class="feature-icon">
+<svg fill="none" height="22" stroke="#1F3A64" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="22">
+<rect height="20" rx="3" width="14" x="5" y="2"></rect>
+<line x1="11" x2="13" y1="18" y2="18"></line>
+</svg>
+</div>
+<div class="feature-text">Everything stays on this iPhone</div>
+</div>
+</div>
+<!-- Inset Grouped Plan Picker -->
+<div class="plan-group" style="margin-top: 24px;">
+<!-- Plan 1: Annual (Selected) -->
+<div class="plan-row plan-row-selected">
+<div class="plan-left">
+<div class="radio-selected">
+<!-- SF Symbol checkmark -->
+<svg fill="none" height="12" stroke="#FFFFFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" viewbox="0 0 14 12" width="12">
+<polyline points="1 6 5 10 13 2"></polyline>
+</svg>
+</div>
+<div class="plan-titles">
+<span class="plan-name">Annual</span>
+<span class="plan-detail">7-day free trial, then $79.99/year</span>
+</div>
+</div>
+<div class="plan-sub-trailing">$6.67/mo</div>
+</div>
+<!-- Plan 2: Monthly -->
+<div class="plan-row">
+<div class="plan-left">
+<div class="radio-unselected"></div>
+<div class="plan-titles">
+<span class="plan-name">Monthly</span>
+<span class="plan-detail">$12.99/month</span>
+</div>
+</div>
+<div class="row-separator"></div>
+</div>
+<!-- Plan 3: Lifetime -->
+<div class="plan-row">
+<div class="plan-left">
+<div class="radio-unselected"></div>
+<div class="plan-titles">
+<span class="plan-name">Lifetime</span>
+<span class="plan-detail">$149.99 one-time purchase</span>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Pinned Bottom Section -->
+<div class="pinned-bottom-section">
+<button class="capsule-cta-button">
+      Start Free Trial
+    </button>
+<div class="legal-note">
+      Free for 7 days, then $79.99 per year. Renews automatically unless canceled at least 24 hours before the trial ends. Cancel anytime in Settings.
+    </div>
+<div class="legal-links">
+<button class="legal-link-btn">Restore Purchases</button>
+<button class="legal-link-btn">Terms of Use</button>
+<button class="legal-link-btn">Privacy Policy</button>
+</div>
+</div>
+</div>
+<!-- Home Indicator -->
+<div class="home-indicator"></div>
+</body></html>
