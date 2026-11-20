@@ -44,7 +44,7 @@ struct SignView: View {
             } header: {
                 Text("What you are signing")
             } footer: {
-                Text("This is a record of condition, not legal advice.")
+                Text("This is a record of condition, not legal advice.").sectionFooterStyle()
             }
 
             if sealed {
@@ -160,7 +160,7 @@ struct SignView: View {
             }
         } footer: {
             if let existing {
-                Text("Signed \(existing.signedAt.formatted(date: .omitted, time: .shortened))")
+                Text("Signed \(existing.signedAt.formatted(date: .omitted, time: .shortened))").sectionFooterStyle()
             }
         }
     }

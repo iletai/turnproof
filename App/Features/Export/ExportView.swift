@@ -74,18 +74,6 @@ struct ExportView: View {
                 .listRowBackground(Color.clear)
             }
 
-            Section {
-                LabeledContent("Pages") { Text("\(report.pageCount)").monospacedDigit() }
-                LabeledContent("Photos") {
-                    Text("\(model.findings(for: inspection).count) in \(model.rooms(for: inspection).count) rooms")
-                        .monospacedDigit()
-                }
-                LabeledContent("Signed by", value: signers(inspection, property))
-                if let artifact {
-                    LabeledContent("File size", value: artifact.sizeDescription)
-                }
-            }
-
             if !unlocked {
                 Section {
                     Label {
@@ -125,7 +113,11 @@ struct ExportView: View {
                     router.push(.verify(inspection.id))
                 } label: {
                     HStack {
-                        Text("Verify Report").foregroundStyle(TPColor.textPrimary)
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("Verify Report").foregroundStyle(TPColor.textPrimary)
+                            Text("Verify rechecks this report against the records stored on this iPhone.")
+                                .sectionFooterStyle()
+                        }
                         Spacer()
                         Image(systemName: "chevron.right")
                             .font(.footnote.weight(.semibold))
@@ -135,9 +127,19 @@ struct ExportView: View {
                 .accessibilityIdentifier("export.verify")
             } header: {
                 Text("Verification code")
-            } footer: {
-                Text("Verify rechecks this report against the records stored on this iPhone.")
             }
+            Section {
+                LabeledContent("Pages") { Text("\(report.pageCount)").monospacedDigit() }
+                LabeledContent("Photos") {
+                    Text("\(model.findings(for: inspection).count) in \(model.rooms(for: inspection).count) rooms")
+                        .monospacedDigit()
+                }
+                LabeledContent("Signed by", value: signers(inspection, property))
+                if let artifact {
+                    LabeledContent("File size", value: artifact.sizeDescription)
+                }
+            }
+
         }
         .listStyle(.insetGrouped)
         .navigationTitle("Report")

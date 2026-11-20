@@ -1,132 +1,117 @@
 import SwiftUI
 
-struct BottomBar<Content: View>: View {
-    @ViewBuilder var content: Content
-
-    var body: some View {
-        VStack(spacing: 8) {
-            Hairline()
-            content
-                .padding(.horizontal, TPSpacing.gutter)
-                .padding(.top, 12)
-                .padding(.bottom, 8)
-        }
-        .background(TPColor.paper)
-    }
+/// "Maple Court · Unit 2B"; file-private so parallel lanes can format the same fields their own way.
+private func propertyTitle(_ property: Property) -> String {
+    [property.label, property.unit].filter { !$0.isEmpty }.joined(separator: " · ")
 }
 
 struct PropertiesListView: View {
     @Environment(AppModel.self) private var model
     @Environment(AppRouter.self) private var router
-    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
     var body: some View {
         _ = model.revision
-        return VStack(spacing: 0) {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 0) {
-                    header
-                    if model.properties.isEmpty {
-                        emptyState
-                    } else {
-                        propertyList
-                    }
-                }
-                .padding(.horizontal, TPSpacing.gutter)
-                .padding(.top, 12)
-                .padding(.bottom, 24)
+        return Group {
+            if model.properties.isEmpty {
+                emptyState
+            } else {
+                propertyList
             }
-            BottomBar {
+        }
+        .background(TPColor.background.ignoresSafeArea())
+        .navigationTitle("Properties")
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button {
+                    router.present(sheet: .settings)
+                } label: {
+                    Image(systemName: "gearshape")
+                }
+                .foregroundStyle(TPColor.textPrimary)
+                .accessibilityLabel("Settings")
+                .accessibilityIdentifier("settings.open")
+            }
+            ToolbarItem(placement: .topBarTrailing) {
                 Button {
                     router.present(sheet: .addProperty)
                 } label: {
-                    Label("Start inspection", systemImage: "plus")
+                    Image(systemName: "plus")
                 }
-                .buttonStyle(TPPrimaryButtonStyle())
+                .accessibilityLabel("Add Property")
                 .accessibilityIdentifier("inspection.start")
             }
-        }
-        .background(TPColor.paper.ignoresSafeArea())
-        .toolbar(.hidden, for: .navigationBar)
-    }
-
-    private var header: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Eyebrow(text: "Turnproof")
-            Text("Properties")
-                .font(TPType.display())
-                .foregroundStyle(TPColor.ink)
-            Text("Condition reports that hold up.")
-                .font(TPType.body())
-                .foregroundStyle(TPColor.inkSecondary)
-            Hairline().padding(.top, 12)
-            // Stacks at accessibility sizes instead of truncating the counts.
-            let layout = dynamicTypeSize.isAccessibilitySize
-                ? AnyLayout(VStackLayout(alignment: .leading, spacing: 4))
-                : AnyLayout(HStackLayout(spacing: 12))
-            layout {
-                Text("\(model.properties.count) units").font(TPType.eyebrow())
-                if !dynamicTypeSize.isAccessibilitySize { Text("·").foregroundStyle(TPColor.inkTertiary) }
-                Text("\(sealedCount) sealed reports").font(TPType.eyebrow())
-                if !dynamicTypeSize.isAccessibilitySize { Spacer() }
-            }
-            .foregroundStyle(TPColor.inkSecondary)
-            .padding(.vertical, 12)
-        }
-    }
-
-    private var sealedCount: Int {
-        model.properties.reduce(0) { total, property in
-            total + model.inspections(for: property).reduce(0) { $0 + model.reports(for: $1).count }
         }
     }
 
     private var propertyList: some View {
-        VStack(spacing: 16) {
-            ForEach(model.properties) { property in
-                Button {
-                    router.push(.property(property.id))
-                } label: {
-                    PropertyRow(property: property,
-                                active: model.inspections(for: property).first(where: { $0.status == .draft }),
-                                sealed: model.inspections(for: property).compactMap { inspection in
-                                    model.reports(for: inspection).first
-                                }.first)
+        List {
+            if let resume = resumeInspection {
+                Section("Continue") {
+                    Button {
+                        router.push(.rooms(resume.inspection.id))
+                    } label: {
+                        ResumeRow(property: resume.property,
+                                  inspection: resume.inspection,
+                                  done: doneRooms(resume.inspection),
+                                  total: model.rooms(for: resume.inspection).count)
+                    }
+                    .buttonStyle(.plain)
+                    .accessibilityIdentifier("inspection.resume")
                 }
-                .buttonStyle(.plain)
-                .accessibilityIdentifier("property.row.\(property.id.uuidString)")
             }
-            Button {
+
+            Section("All properties") {
+                ForEach(model.properties) { property in
+                    Button {
+                        router.push(.property(property.id))
+                    } label: {
+                        PropertyRow(property: property,
+                                    active: activeInspection(for: property),
+                                    sealed: sealedReport(for: property))
+                    }
+                    .buttonStyle(.plain)
+                    .accessibilityIdentifier("property.row.\(property.id.uuidString)")
+                }
+            }
+        }
+        .listStyle(.insetGrouped)
+    }
+
+    private var emptyState: some View {
+        ContentUnavailableView {
+            Label("No properties yet", systemImage: "building.2")
+        } description: {
+            Text("Add a rental unit to start its first condition report.")
+        } actions: {
+            Button("Add Property") {
                 router.present(sheet: .addProperty)
-            } label: {
-                VStack(spacing: 6) {
-                    Image(systemName: "plus").font(.system(.title3, weight: .medium))
-                    Text("Add your first unit").font(TPType.bodyStrong())
-                    Text("Register an address and start a baseline.")
-                        .font(TPType.small()).foregroundStyle(TPColor.inkSecondary)
-                }
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 28)
-                .overlay(
-                    Rectangle().stroke(TPColor.hairline, style: StrokeStyle(lineWidth: 1, dash: [4, 4]))
-                )
-                .foregroundStyle(TPColor.ink)
             }
-            .buttonStyle(.plain)
+            .buttonStyle(.borderedProminent)
+            .controlSize(.large)
             .accessibilityIdentifier("property.add")
         }
     }
 
-    private var emptyState: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Text("No units yet.")
-                .font(TPType.heading())
-                .foregroundStyle(TPColor.ink)
-            Text("Add a unit, walk it room by room, and hand the tenant a signed condition report before they move in or out.")
-                .font(TPType.body())
-                .foregroundStyle(TPColor.inkSecondary)
+    /// Most recently started draft across every property; drives the "Continue" section.
+    private var resumeInspection: (property: Property, inspection: Inspection)? {
+        let drafts = model.properties.flatMap { property in
+            model.inspections(for: property)
+                .filter { $0.status == .draft }
+                .map { (property: property, inspection: $0) }
         }
-        .padding(.vertical, 32)
+        return drafts.max { $0.inspection.startedAt < $1.inspection.startedAt }
+    }
+
+    private func activeInspection(for property: Property) -> Inspection? {
+        model.inspections(for: property).first { $0.status == .draft }
+    }
+
+    private func sealedReport(for property: Property) -> SealedReport? {
+        model.inspections(for: property).compactMap { model.reports(for: $0).first }.first
+    }
+
+    private func doneRooms(_ inspection: Inspection) -> Int {
+        model.rooms(for: inspection).filter { !model.findings(room: $0).isEmpty }.count
     }
 }
 
@@ -136,54 +121,95 @@ struct PropertyRow: View {
     let sealed: SealedReport?
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            HStack(alignment: .firstTextBaseline) {
-                Text(property.label)
-                    .font(TPType.heading())
-                    .foregroundStyle(TPColor.ink)
-                Spacer()
-                if sealed != nil {
-                    StatusChip(text: "Sealed", color: TPColor.good, background: TPColor.goodSoft)
-                } else if active != nil {
-                    StatusChip(text: "In progress", color: TPColor.warning, background: TPColor.warningSoft)
-                }
+        HStack(spacing: 12) {
+            VStack(alignment: .leading, spacing: 3) {
+                Text(propertyTitle(property))
+                    .font(.headline)
+                    .foregroundStyle(TPColor.textPrimary)
+                Text(property.addressLine)
+                    .font(.subheadline)
+                    .foregroundStyle(TPColor.textSecondary)
+                statusLine
+                    .padding(.top, 2)
             }
-            Text([property.addressLine, property.unit].filter { !$0.isEmpty }.joined(separator: " · "))
-                .font(TPType.small())
-                .foregroundStyle(TPColor.inkSecondary)
-            Hairline()
-            HStack {
-                Text(active.map { "\($0.kind.title) inspection · \($0.status.rawValue)" }
-                     ?? sealed.map { "Report sealed \(Self.date($0.generatedAt))" }
-                     ?? "No reports yet")
-                    .font(TPType.small())
-                    .foregroundStyle(TPColor.inkSecondary)
-                Spacer()
-                if let sealed {
-                    Text(sealed.sha256.uppercased().prefix(4))
-                        .font(TPType.mono())
-                        .foregroundStyle(TPColor.inkTertiary)
-                }
-                Image(systemName: "chevron.right")
-                    .font(.system(.caption, weight: .semibold))
-                    .foregroundStyle(TPColor.inkTertiary)
-            }
+            .multilineTextAlignment(.leading)
+            .frame(maxWidth: .infinity, alignment: .leading)
+
+            Image(systemName: "chevron.right")
+                .font(.footnote.weight(.semibold))
+                .foregroundStyle(.tertiary)
         }
-        .padding(16)
-        .background(TPColor.paperRaised)
-        .overlay(Rectangle().stroke(TPColor.hairline, lineWidth: 1))
+        .padding(.vertical, 4)
+        .frame(minHeight: 44)
+        .contentShape(Rectangle())
     }
 
-    static func date(_ date: Date) -> String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "d MMM"
-        return formatter.string(from: date)
+    @ViewBuilder private var statusLine: some View {
+        if let sealed {
+            HStack(spacing: 6) {
+                Image(systemName: "checkmark.seal.fill")
+                    .foregroundStyle(TPColor.good)
+                Text("Sealed \(Self.date(sealed.generatedAt))")
+                    .foregroundStyle(TPColor.textSecondary)
+            }
+            .font(.footnote)
+        } else if active != nil {
+            HStack(spacing: 6) {
+                Image(systemName: "circle.dotted")
+                    .foregroundStyle(TPColor.fair)
+                Text("In progress")
+                    .foregroundStyle(TPColor.textSecondary)
+            }
+            .font(.footnote)
+        } else {
+            HStack(spacing: 6) {
+                Image(systemName: "doc.text")
+                    .foregroundStyle(TPColor.textSecondary)
+                Text("No reports yet")
+                    .foregroundStyle(TPColor.textSecondary)
+            }
+            .font(.footnote)
+        }
+    }
+
+    static func date(_ date: Date) -> String { date.formatted(date: .abbreviated, time: .omitted) }
+}
+
+private struct ResumeRow: View {
+    let property: Property
+    let inspection: Inspection
+    let done: Int
+    let total: Int
+
+    var body: some View {
+        HStack(spacing: 12) {
+            VStack(alignment: .leading, spacing: 4) {
+                Text("Continue inspection")
+                    .font(.headline)
+                    .foregroundStyle(TPColor.textPrimary)
+                Text("\(propertyTitle(property)) · \(done) of \(total) rooms")
+                    .font(.subheadline)
+                    .foregroundStyle(TPColor.textSecondary)
+                ProgressView(value: Double(done), total: Double(max(total, 1)))
+                    .progressViewStyle(.linear)
+                    .tint(TPColor.tint)
+                    .padding(.top, 2)
+            }
+            .multilineTextAlignment(.leading)
+            .frame(maxWidth: .infinity, alignment: .leading)
+
+            Image(systemName: "chevron.right")
+                .font(.footnote.weight(.semibold))
+                .foregroundStyle(.tertiary)
+        }
+        .padding(.vertical, 4)
+        .frame(minHeight: 44)
+        .contentShape(Rectangle())
     }
 }
 
 struct AddPropertySheet: View {
     @Environment(AppModel.self) private var model
-    @Environment(AppRouter.self) private var router
     @Environment(\.dismiss) private var dismiss
 
     @State private var label = ""
@@ -194,59 +220,50 @@ struct AddPropertySheet: View {
 
     var body: some View {
         NavigationStack {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 16) {
-                    Eyebrow(text: "New unit")
-                    Text("Where is it?")
-                        .font(TPType.title())
-                        .foregroundStyle(TPColor.ink)
-                    field("Label", text: $label, id: "property.field.label")
-                    field("Address", text: $address, id: "property.field.address")
-                    field("Unit (optional)", text: $unit, id: "property.field.unit")
-                    field("Your name", text: $landlord, id: "property.field.landlord")
-                    if let error {
-                        Text(error).font(TPType.small()).foregroundStyle(TPColor.damage)
+            Form {
+                Section {
+                    TextField("Label", text: $label)
+                        .accessibilityIdentifier("property.field.label")
+                    TextField("Address", text: $address)
+                        .accessibilityIdentifier("property.field.address")
+                    TextField("Unit (optional)", text: $unit)
+                        .accessibilityIdentifier("property.field.unit")
+                    TextField("Your name", text: $landlord)
+                        .accessibilityIdentifier("property.field.landlord")
+                }
+                if let error {
+                    Section {
+                        Text(error)
+                            .font(.footnote)
+                            .foregroundStyle(TPColor.damage)
                     }
                 }
-                .padding(TPSpacing.gutter)
             }
-            .background(TPColor.paper.ignoresSafeArea())
-            .safeAreaInset(edge: .bottom) {
-                BottomBar {
-                    Button("Save unit") {
-                        do {
-                            try model.addProperty(label: label, address: address, unit: unit, landlord: landlord)
-                            dismiss()
-                        } catch RepositoryError.invalidLabel {
-                            error = "A label is required."
-                        } catch RepositoryError.invalidAddress {
-                            error = "An address is required."
-                        } catch {
-                            self.error = "Could not save this unit."
-                        }
-                    }
-                    .buttonStyle(TPPrimaryButtonStyle())
-                    .accessibilityIdentifier("property.save")
-                }
-            }
+            .navigationTitle("New unit")
+            .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") { dismiss() }
+                }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Save unit") { save() }
+                        .fontWeight(.semibold)
+                        .accessibilityIdentifier("property.save")
                 }
             }
         }
     }
 
-    private func field(_ title: String, text: Binding<String>, id: String) -> some View {
-        VStack(alignment: .leading, spacing: 6) {
-            Eyebrow(text: title)
-            TextField("", text: text)
-                .font(TPType.body())
-                .padding(.horizontal, 16)
-                .frame(minHeight: 48)
-                .background(TPColor.paperRaised)
-                .overlay(Rectangle().stroke(TPColor.hairline, lineWidth: 1))
-                .accessibilityIdentifier(id)
+    private func save() {
+        do {
+            try model.addProperty(label: label, address: address, unit: unit, landlord: landlord)
+            dismiss()
+        } catch RepositoryError.invalidLabel {
+            error = "A label is required."
+        } catch RepositoryError.invalidAddress {
+            error = "An address is required."
+        } catch {
+            self.error = "Could not save this unit."
         }
     }
 }

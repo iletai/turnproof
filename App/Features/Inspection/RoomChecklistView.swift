@@ -3,6 +3,7 @@ import SwiftUI
 struct RoomChecklistView: View {
     @Environment(AppModel.self) private var model
     @Environment(AppRouter.self) private var router
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     let inspectionID: UUID
 
     var body: some View {
@@ -24,18 +25,17 @@ struct RoomChecklistView: View {
         return List {
             Section {
                 VStack(alignment: .leading, spacing: 8) {
-                    ViewThatFits(in: .horizontal) {
-                        HStack {
-                            Text("\(done) of \(rooms.count) rooms").font(.headline).monospacedDigit()
-                            Spacer()
-                            photoCount(inspection)
-                        }
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text("\(done) of \(rooms.count) rooms").font(.headline).monospacedDigit()
-                            photoCount(inspection)
-                        }
+                    // Stacks at accessibility sizes instead of truncating the counts.
+                    let layout = dynamicTypeSize.isAccessibilitySize
+                        ? AnyLayout(VStackLayout(alignment: .leading, spacing: 4))
+                        : AnyLayout(HStackLayout(alignment: .firstTextBaseline))
+                    layout {
+                        Text("\(done) of \(rooms.count) rooms").font(.headline).monospacedDigit()
+                        if !dynamicTypeSize.isAccessibilitySize { Spacer() }
+                        photoCount(inspection)
                     }
                     ProgressView(value: Double(done), total: Double(max(rooms.count, 1)))
+                        .accessibilityHidden(true)
                 }
                 .padding(.vertical, 4)
             }
@@ -46,8 +46,6 @@ struct RoomChecklistView: View {
                 }
             } header: {
                 Text("Rooms")
-            } footer: {
-                Text("Tap a room to take photos. Every room needs at least one photo.")
             }
         }
         .listStyle(.insetGrouped)
@@ -66,11 +64,17 @@ struct RoomChecklistView: View {
             }
         }
         .bottomActionBar {
-            Button("Review & Sign") {
-                router.push(.review(inspection.id))
+            VStack(spacing: 8) {
+                // Outside the List: list section footers cap Dynamic Type.
+                Text("Tap a room to take photos. Every room needs at least one photo.")
+                    .sectionFooterStyle()
+                    .multilineTextAlignment(.center)
+                Button("Review & Sign") {
+                    router.push(.review(inspection.id))
+                }
+                .primaryActionStyle()
+                .accessibilityIdentifier("review.next")
             }
-            .primaryActionStyle()
-            .accessibilityIdentifier("review.next")
         }
     }
 

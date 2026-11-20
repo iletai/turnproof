@@ -23,9 +23,9 @@ struct ReviewView: View {
         // Missing signatures are collected on the next screen, so they never block the way there.
         let blocking = issues.filter { if case .missingSignature = $0 { false } else { true } }
         return List {
-            if !blocking.isEmpty {
+            if !issues.isEmpty {
                 Section("Needs attention") {
-                    ForEach(Array(blocking.enumerated()), id: \.offset) { index, issue in
+                    ForEach(Array(issues.enumerated()), id: \.offset) { index, issue in
                         Label {
                             Text(issue.message)
                                 .accessibilityIdentifier("review.issue.\(index + 1)")
@@ -117,6 +117,8 @@ struct FindingThumbnail: View {
                 }
             Label(finding.condition.title, systemImage: finding.condition.symbol)
                 .font(.caption)
+                .lineLimit(1)
+                .minimumScaleFactor(0.8)
                 .foregroundStyle(TPColor.textSecondary)
                 .labelStyle(ConditionLabelStyle(color: TPColor.tint(for: finding.condition)))
         }

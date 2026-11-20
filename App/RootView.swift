@@ -15,5 +15,6 @@ struct RootView: View {
             cover: { _ in EmptyView() }
         )
         .environment(router)
+        .tint(TPColor.tint)
     }
 }

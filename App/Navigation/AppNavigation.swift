@@ -16,12 +16,14 @@ enum AppRoute: Hashable, Sendable {
 enum AppSheet: Identifiable, Hashable, Sendable {
     case addProperty
     case paywall
+    case settings
     case addFinding(inspection: UUID, room: UUID)
 
     var id: String {
         switch self {
         case .addProperty: "addProperty"
         case .paywall: "paywall"
+        case .settings: "settings"
         case .addFinding(let inspection, let room): "addFinding-\(inspection)-\(room)"
         }
     }
@@ -69,6 +71,8 @@ struct AppSheetView: View {
             AddPropertySheet()
         case .paywall:
             PaywallScreen()
+        case .settings:
+            SettingsView()
         case .addFinding(let inspection, let room):
             CaptureView(inspectionID: inspection, roomID: room, isSheet: true)
         }

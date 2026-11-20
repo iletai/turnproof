@@ -35,7 +35,7 @@ struct VerifyView: View {
                     Text(model.integrity.shortCode(report.sha256)).monospaced()
                 }
             } footer: {
-                Text("Verification runs locally. Turnproof cannot prove the record to a third party on its own; the code lets anyone compare the PDF against the original packet.")
+                Text("Verification runs locally. Turnproof cannot prove the record to a third party on its own; the code lets anyone compare the PDF against the original packet.").sectionFooterStyle()
             }
         }
         .listStyle(.insetGrouped)

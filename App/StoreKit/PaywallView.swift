@@ -11,6 +11,8 @@ struct PaywallView: View {
             }
             .subscriptionStoreControlStyle(.compactPicker)
             .storeButton(.visible, for: .restorePurchases)
+            // PaywallScreen owns the close button (and its onUnlocked hand-off).
+            .storeButton(.hidden, for: .cancellation)
             .subscriptionStorePolicyDestination(url: Self.termsURL, for: .termsOfService)
             .subscriptionStorePolicyDestination(url: Self.privacyURL, for: .privacyPolicy)
             ProductView(id: Store.lifetimeID)

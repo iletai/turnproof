@@ -49,18 +49,12 @@
         }
       }
     },
-    "%@ inspection · %@" : {
+    "%@ report" : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ inspection · %@"
-          }
-        },
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Đợt kiểm tra %@ · %@"
+            "value" : "Biên bản %@"
           }
         }
       }
@@ -81,34 +75,80 @@
         }
       }
     },
-    "%lld SEALED" : {
+    "%@ · %@" : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld SEALED"
-          }
-        },
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%lld ĐÃ NIÊM PHONG"
+            "value" : "%1$@ · %2$@"
           }
         }
       }
     },
-    "%lld of %lld photos · one photo per finding" : {
+    "%@ · %lld of %lld rooms" : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld of %lld photos · one photo per finding"
-          }
-        },
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%lld trên %lld ảnh · mỗi mục ghi nhận một ảnh"
+            "value" : "%1$@ · %2$lld/%3$lld phòng"
+          }
+        }
+      }
+    },
+    "%@ · %lld photos" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ · %2$lld ảnh"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ · %#@count@"
+          },
+          "substitutions" : {
+            "count" : {
+              "argNum" : 2,
+              "formatSpecifier" : "lld",
+              "variations" : {
+                "plural" : {
+                  "one" : {
+                    "stringUnit" : {
+                      "state" : "translated",
+                      "value" : "%arg photo"
+                    }
+                  },
+                  "other" : {
+                    "stringUnit" : {
+                      "state" : "translated",
+                      "value" : "%arg photos"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "%lld" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld"
+          }
+        }
+      }
+    },
+    "%lld in %lld rooms" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$lld ảnh trong %2$lld phòng"
           }
         }
       }
@@ -129,66 +169,30 @@
         }
       }
     },
-    "%lld of %lld rooms recorded · %lld photos" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld of %lld rooms recorded · %lld photos"
-          }
-        },
-        "vi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Đã ghi %lld trên %lld phòng · %lld ảnh"
-          }
-        }
-      }
-    },
-    "%lld pages" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld pages"
-          }
-        },
-        "vi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld trang"
-          }
-        }
-      }
-    },
     "%lld photos" : {
       "localizations" : {
         "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld photos"
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld photo"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld photos"
+                }
+              }
+            }
           }
         },
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lld ảnh"
-          }
-        }
-      }
-    },
-    "%lld photos across %lld rooms. Everything below is hashed into the sealed packet." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld photos across %lld rooms. Everything below is hashed into the sealed packet."
-          }
-        },
-        "vi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld ảnh ở %lld phòng. Toàn bộ nội dung bên dưới được băm vào tập hồ sơ niêm phong."
           }
         }
       }
@@ -209,38 +213,6 @@
         }
       }
     },
-    "%lld sealed reports" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld sealed reports"
-          }
-        },
-        "vi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld biên bản đã niêm phong"
-          }
-        }
-      }
-    },
-    "%lld units" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld units"
-          }
-        },
-        "vi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld căn"
-          }
-        }
-      }
-    },
     "A damage flag is missing its note." : {
       "localizations" : {
         "en" : {
@@ -257,18 +229,22 @@
         }
       }
     },
-    "Add a unit, walk it room by room, and hand the tenant a signed condition report before they move in or out." : {
+    "Add Property" : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Add a unit, walk it room by room, and hand the tenant a signed condition report before they move in or out."
-          }
-        },
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Thêm một căn, đi từng phòng, rồi giao cho người thuê biên bản hiện trạng có chữ ký trước khi họ dọn vào hoặc dọn ra."
+            "value" : "Thêm bất động sản"
+          }
+        }
+      }
+    },
+    "Add a rental unit to start its first condition report." : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Thêm một căn cho thuê để bắt đầu biên bản hiện trạng đầu tiên."
           }
         }
       }
@@ -289,18 +265,22 @@
         }
       }
     },
-    "Add your first unit" : {
+    "Address" : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Add your first unit"
-          }
-        },
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Thêm căn đầu tiên"
+            "value" : "Địa chỉ"
+          }
+        }
+      }
+    },
+    "All properties" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tất cả bất động sản"
           }
         }
       }
@@ -337,22 +317,6 @@
         }
       }
     },
-    "Both parties sign" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Both parties sign"
-          }
-        },
-        "vi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Hai bên cùng ký"
-          }
-        }
-      }
-    },
     "Both signatures are required." : {
       "localizations" : {
         "en" : {
@@ -365,6 +329,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Cần có đủ hai chữ ký."
+          }
+        }
+      }
+    },
+    "Camera Access" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quyền camera"
           }
         }
       }
@@ -385,22 +359,6 @@
         }
       }
     },
-    "Checks" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Checks"
-          }
-        },
-        "vi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Hạng mục kiểm tra"
-          }
-        }
-      }
-    },
     "Clear" : {
       "localizations" : {
         "en" : {
@@ -417,18 +375,22 @@
         }
       }
     },
-    "Condition reports that hold up." : {
+    "Close" : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Condition reports that hold up."
-          }
-        },
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Biên bản hiện trạng đứng vững trước tranh chấp."
+            "value" : "Đóng"
+          }
+        }
+      }
+    },
+    "Contact Support" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Liên hệ hỗ trợ"
           }
         }
       }
@@ -465,18 +427,32 @@
         }
       }
     },
-    "Copy digest" : {
+    "Continue to Sign" : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Copy digest"
-          }
-        },
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sao chép mã băm"
+            "value" : "Tiếp tục ký"
+          }
+        }
+      }
+    },
+    "Copied" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Đã chép"
+          }
+        }
+      }
+    },
+    "Copy" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chép"
           }
         }
       }
@@ -513,18 +489,32 @@
         }
       }
     },
-    "Digest copied" : {
+    "Damaged" : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Digest copied"
-          }
-        },
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Đã sao chép mã băm"
+            "value" : "Hư hỏng"
+          }
+        }
+      }
+    },
+    "Damaged item needs a note" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hạng mục hư hỏng cần ghi chú"
+          }
+        }
+      }
+    },
+    "Delete photo %lld" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Xoá ảnh %lld"
           }
         }
       }
@@ -545,34 +535,12 @@
         }
       }
     },
-    "Drawn" : {
+    "Everything stays on this iPhone" : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Drawn"
-          }
-        },
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Đã vẽ"
-          }
-        }
-      }
-    },
-    "Every room has a photo, every damage flag has a note, and both signatures are recorded after you sign." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Every room has a photo, every damage flag has a note, and both signatures are recorded after you sign."
-          }
-        },
-        "vi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Mỗi phòng đều có ảnh, mỗi mục báo hư đều có ghi chú, và cả hai chữ ký được ghi lại sau khi bạn ký."
+            "value" : "Mọi dữ liệu chỉ lưu trên iPhone này"
           }
         }
       }
@@ -593,6 +561,36 @@
         }
       }
     },
+    "Fair" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tạm được"
+          }
+        }
+      }
+    },
+    "File size" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dung lượng"
+          }
+        }
+      }
+    },
+    "First page of the report" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trang đầu của biên bản"
+          }
+        }
+      }
+    },
     "Flag as damage" : {
       "localizations" : {
         "en" : {
@@ -605,6 +603,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Đánh dấu hư hỏng"
+          }
+        }
+      }
+    },
+    "Free" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Miễn phí"
+          }
+        }
+      }
+    },
+    "Good" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tốt"
           }
         }
       }
@@ -625,18 +643,22 @@
         }
       }
     },
-    "History" : {
+    "Help" : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "History"
-          }
-        },
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Lịch sử"
+            "value" : "Trợ giúp"
+          }
+        }
+      }
+    },
+    "In progress" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Đang thực hiện"
           }
         }
       }
@@ -689,34 +711,48 @@
         }
       }
     },
-    "Landlord countersigns" : {
+    "Label" : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Landlord countersigns"
-          }
-        },
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Chủ nhà ký xác nhận"
+            "value" : "Tên"
           }
         }
       }
     },
-    "Landlord: %@" : {
+    "Landlord" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chủ nhà"
+          }
+        }
+      }
+    },
+    "Landlord · %@" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chủ nhà · %@"
+          }
+        }
+      }
+    },
+    "Latest photo in this room" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Landlord: %@"
+            "value" : "Latest photo in this room"
           }
         },
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Chủ nhà: %@"
+            "value" : "Ảnh mới nhất của phòng này"
           }
         }
       }
@@ -753,18 +789,52 @@
         }
       }
     },
-    "No photos yet" : {
+    "Move-in, move-out and periodic inspections" : {
       "localizations" : {
-        "en" : {
+        "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "No photos yet"
+            "value" : "Kiểm tra khi dọn vào, dọn đi và định kỳ"
           }
-        },
+        }
+      }
+    },
+    "Needs attention" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cần xử lý"
+          }
+        }
+      }
+    },
+    "New unit" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Căn mới"
+          }
+        }
+      }
+    },
+    "No photos" : {
+      "localizations" : {
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Chưa có ảnh"
+          }
+        }
+      }
+    },
+    "No properties yet" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chưa có bất động sản"
           }
         }
       }
@@ -817,22 +887,6 @@
         }
       }
     },
-    "No units yet." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No units yet."
-          }
-        },
-        "vi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Chưa có căn nào."
-          }
-        }
-      }
-    },
     "Not now" : {
       "localizations" : {
         "en" : {
@@ -849,18 +903,72 @@
         }
       }
     },
-    "One report is free. A subscription covers every unit and every inspection." : {
+    "Pages" : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "One report is free. A subscription covers every unit and every inspection."
-          }
-        },
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Một biên bản miễn phí. Gói đăng ký áp dụng cho mọi căn và mọi đợt kiểm tra."
+            "value" : "Số trang"
+          }
+        }
+      }
+    },
+    "Photo %lld of %lld" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ảnh %1$lld/%2$lld"
+          }
+        }
+      }
+    },
+    "Photos" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ảnh"
+          }
+        }
+      }
+    },
+    "Plan" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gói"
+          }
+        }
+      }
+    },
+    "Privacy" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quyền riêng tư"
+          }
+        }
+      }
+    },
+    "Privacy Policy" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chính sách quyền riêng tư"
+          }
+        }
+      }
+    },
+    "Pro" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pro"
           }
         }
       }
@@ -897,98 +1005,90 @@
         }
       }
     },
-    "Register an address and start a baseline." : {
+    "Report" : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Register an address and start a baseline."
-          }
-        },
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Nhập địa chỉ và lập bản hiện trạng đầu tiên."
+            "value" : "Biên bản"
           }
         }
       }
     },
-    "Report ready" : {
+    "Report sealed" : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Report ready"
-          }
-        },
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Biên bản đã sẵn sàng"
+            "value" : "Đã niêm phong biên bản"
           }
         }
       }
     },
-    "Report sealed %@" : {
+    "Reports" : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Report sealed %@"
-          }
-        },
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Đã niêm phong %@"
+            "value" : "Biên bản"
           }
         }
       }
     },
-    "Resolve %lld issue%@" : {
+    "Resolve %lld issues to continue." : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Resolve %lld issue%@"
-          }
-        },
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Xử lý %lld vấn đề%@"
+            "value" : "Xử lý %lld vấn đề để tiếp tục."
+          }
+        },
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Resolve %lld issue to continue."
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Resolve %lld issues to continue."
+                }
+              }
+            }
           }
         }
       }
     },
-    "Review & sign" : {
+    "Restore Purchases" : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Review & sign"
-          }
-        },
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Xem lại và ký"
+            "value" : "Khôi phục giao dịch mua"
           }
         }
       }
     },
-    "Review before signing" : {
+    "Review" : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Review before signing"
-          }
-        },
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Xem lại trước khi ký"
+            "value" : "Xem lại"
+          }
+        }
+      }
+    },
+    "Review & Sign" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Xem lại & ký"
           }
         }
       }
@@ -1009,6 +1109,16 @@
         }
       }
     },
+    "Rooms" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Phòng"
+          }
+        }
+      }
+    },
     "Save unit" : {
       "localizations" : {
         "en" : {
@@ -1025,18 +1135,32 @@
         }
       }
     },
-    "Seal report" : {
+    "Seal Report" : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Seal report"
-          }
-        },
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Niêm phong biên bản"
+          }
+        }
+      }
+    },
+    "Seal and share unlimited reports" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Niêm phong và chia sẻ biên bản không giới hạn"
+          }
+        }
+      }
+    },
+    "Sealed %@" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Niêm phong %@"
           }
         }
       }
@@ -1057,6 +1181,26 @@
         }
       }
     },
+    "See Plans" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Xem các gói"
+          }
+        }
+      }
+    },
+    "Settings" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cài đặt"
+          }
+        }
+      }
+    },
     "Share PDF" : {
       "localizations" : {
         "en" : {
@@ -1073,34 +1217,42 @@
         }
       }
     },
-    "Sign both parties" : {
+    "Sign" : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sign both parties"
-          }
-        },
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ký cả hai bên"
+            "value" : "Ký"
           }
         }
       }
     },
-    "Sign with a finger inside each box. The signatures are drawn at %@ and hashed into the packet." : {
+    "Sign here" : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sign with a finger inside each box. The signatures are drawn at %@ and hashed into the packet."
-          }
-        },
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ký bằng ngón tay trong từng khung. Chữ ký được vẽ tại %@ và được băm vào tập hồ sơ."
+            "value" : "Ký tại đây"
+          }
+        }
+      }
+    },
+    "Signed %@" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Đã ký %@"
+          }
+        }
+      }
+    },
+    "Signed by" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Người ký"
           }
         }
       }
@@ -1117,22 +1269,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Vẫn còn hạng mục chưa xong. Quay lại bước Xem lại."
-          }
-        }
-      }
-    },
-    "Start inspection" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Start inspection"
-          }
-        },
-        "vi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bắt đầu kiểm tra"
           }
         }
       }
@@ -1185,18 +1321,42 @@
         }
       }
     },
-    "Tenant signs first" : {
+    "Tap a room to take photos. Every room needs at least one photo." : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tenant signs first"
-          }
-        },
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Người thuê ký trước"
+            "value" : "Chạm vào một phòng để chụp ảnh. Mỗi phòng cần ít nhất một ảnh."
+          }
+        }
+      }
+    },
+    "Tenant" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Người thuê"
+          }
+        }
+      }
+    },
+    "Tenant · %@" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Người thuê · %@"
+          }
+        }
+      }
+    },
+    "Terms of Use" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Điều khoản sử dụng"
           }
         }
       }
@@ -1229,22 +1389,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ảnh này quá lớn để lưu."
-          }
-        }
-      }
-    },
-    "The PDF is stored on this device and never uploaded. Share it with the tenant or keep it with your lease." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "The PDF is stored on this device and never uploaded. Share it with the tenant or keep it with your lease."
-          }
-        },
-        "vi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tệp PDF chỉ lưu trên máy này và không bao giờ được tải lên. Gửi cho người thuê hoặc lưu cùng hợp đồng thuê."
           }
         }
       }
@@ -1345,6 +1489,32 @@
         }
       }
     },
+    "This device has no camera. Use Library instead." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This device has no camera. Use Library instead."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Thiết bị này không có camera. Hãy chọn từ Thư viện."
+          }
+        }
+      }
+    },
+    "This is a record of condition, not legal advice." : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Đây là biên bản ghi nhận hiện trạng, không phải tư vấn pháp lý."
+          }
+        }
+      }
+    },
     "This packet is over 20 MB. Mail providers may reject it; AirDrop or Files works." : {
       "localizations" : {
         "en" : {
@@ -1409,6 +1579,26 @@
         }
       }
     },
+    "Turnproof Pro" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Turnproof Pro"
+          }
+        }
+      }
+    },
+    "Unit (optional)" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Căn (không bắt buộc)"
+          }
+        }
+      }
+    },
     "Unit not found" : {
       "localizations" : {
         "en" : {
@@ -1425,14 +1615,18 @@
         }
       }
     },
-    "Unlock sharing" : {
+    "Unlimited condition reports" : {
       "localizations" : {
-        "en" : {
+        "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Unlock sharing"
+            "value" : "Biên bản hiện trạng không giới hạn"
           }
-        },
+        }
+      }
+    },
+    "Unlock Sharing" : {
+      "localizations" : {
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1441,66 +1635,62 @@
         }
       }
     },
-    "Verification runs locally. Turnproof cannot prove the record to a third party on its own; the digest lets anyone compare the PDF against the original packet." : {
+    "Verification code" : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Verification runs locally. Turnproof cannot prove the record to a third party on its own; the digest lets anyone compare the PDF against the original packet."
-          }
-        },
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Việc xác minh chạy trên máy. Turnproof không thể tự mình chứng minh hồ sơ với bên thứ ba; mã băm cho phép bất kỳ ai đối chiếu tệp PDF với tập hồ sơ gốc."
+            "value" : "Mã xác minh"
           }
         }
       }
     },
-    "Verify packet" : {
+    "Verification runs locally. Turnproof cannot prove the record to a third party on its own; the code lets anyone compare the PDF against the original packet." : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Verify packet"
-          }
-        },
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Xác minh tập hồ sơ"
+            "value" : "Việc xác minh chạy ngay trên máy. Turnproof không tự chứng minh biên bản với bên thứ ba; mã này giúp bất kỳ ai đối chiếu PDF với bộ hồ sơ gốc."
           }
         }
       }
     },
-    "Verify this report" : {
+    "Verify Report" : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Verify this report"
-          }
-        },
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Xác minh biên bản này"
+            "value" : "Xác minh biên bản"
           }
         }
       }
     },
-    "View sealed report" : {
+    "Verify rechecks this report against the records stored on this iPhone." : {
       "localizations" : {
-        "en" : {
+        "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "View sealed report"
+            "value" : "Xác minh sẽ đối chiếu lại biên bản với dữ liệu lưu trên iPhone này."
           }
-        },
+        }
+      }
+    },
+    "View Sealed Report" : {
+      "localizations" : {
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Xem biên bản đã niêm phong"
+          }
+        }
+      }
+    },
+    "We walked through %@ together on %@ and reviewed %lld photos across %lld rooms. This report records the condition we observed." : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chúng tôi đã cùng kiểm tra %1$@ vào ngày %2$@ và xem lại %3$lld ảnh trong %4$lld phòng. Biên bản này ghi nhận hiện trạng chúng tôi quan sát được."
           }
         }
       }
@@ -1521,66 +1711,32 @@
         }
       }
     },
-    "Where is it?" : {
+    "What you are signing" : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Where is it?"
-          }
-        },
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Địa chỉ căn này"
+            "value" : "Nội dung bạn ký"
           }
         }
       }
     },
-    "·" : {
+    "Your first report was free. Subscribe to seal and share every inspection." : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "·"
-          }
-        },
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "·"
+            "value" : "Biên bản đầu tiên của bạn được miễn phí. Đăng ký để niêm phong và chia sẻ mọi lần kiểm tra."
           }
         }
       }
     },
-    "This device has no camera. Use Library instead." : {
+    "Your name" : {
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "This device has no camera. Use Library instead."
-          }
-        },
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Thiết bị này không có camera. Hãy chọn từ Thư viện."
-          }
-        }
-      }
-    },
-    "Latest photo in this room" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Latest photo in this room"
-          }
-        },
-        "vi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ảnh mới nhất của phòng này"
+            "value" : "Tên của bạn"
           }
         }
       }
